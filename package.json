@@ -243,7 +243,7 @@
     "bufferutil": "^4.1.0",
     "cheerio": "^1.2.0",
     "cronstrue": "^3.14.0",
-    "docx-preview": "^0.3.7",
+    "docx-preview": "^0.4.1",
     "dompurify": "^3.3.1",
     "electron-log": "^5.4.3",
     "extract-zip": "^2.0.1",
