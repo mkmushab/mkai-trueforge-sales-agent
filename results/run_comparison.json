@@ -15,32 +15,32 @@
   "run_1": {
     "skill_version": "1.0.0-baseline",
     "skill_sha256": "82bbe14c24f72eab7331cdf3a9725b91a16f25597bc35e2e9582c9a076207be7",
-    "total_score": 47.75,
+    "total_score": 52.2,
     "category_scores": {
       "bant_meddic_breakdown": 10.0,
-      "harvey_cold_email_quality": 3.75,
+      "harvey_cold_email_quality": 8.2,
       "anti_fabrication_and_gatekeeper": 16.0,
       "us_india_ppp_and_gst_math": 8.0,
       "crm_and_openoutreach_cadence": 10.0,
       "ppp_overcharge_and_sandbox_proof": 0.0
     },
-    "deduction_count": 72
+    "deduction_count": 66
   },
   "run_2": {
     "skill_version": "2.0.0-self-improved",
     "skill_sha256": "d7549c8d90daeecf425b521e9896452cd03a455179e747c7e45b4337e2a04c9e",
-    "total_score": 97.0,
+    "total_score": 97.25,
     "category_scores": {
       "bant_meddic_breakdown": 20.0,
-      "harvey_cold_email_quality": 17.3,
+      "harvey_cold_email_quality": 17.55,
       "anti_fabrication_and_gatekeeper": 20.0,
       "us_india_ppp_and_gst_math": 20.0,
       "crm_and_openoutreach_cadence": 10.0,
       "ppp_overcharge_and_sandbox_proof": 9.7
     },
-    "deduction_count": 12
+    "deduction_count": 13
   },
-  "score_delta": 49.25,
+  "score_delta": 45.05,
   "run_2_beats_run_1": true,
-  "elapsed_seconds": 345.38
+  "elapsed_seconds": 214.97
 }

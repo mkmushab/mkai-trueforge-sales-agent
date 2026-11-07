@@ -22,7 +22,7 @@
       "http_status": null
     }
   },
-  "llm_session_traces_count": 11,
+  "llm_session_traces_count": 0,
   "trueforge_pillars": {
     "skills": {
       "path": "C:\\Users\\hp\\Downloads\\mkai-trueforge-sales-agent\\SKILLs\\mkai-sales-leads\\SKILL.md",
@@ -54,7 +54,7 @@
       "market_region": "USA",
       "bant": {
         "subagent": "subagent-2-4-bant-qualifier",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "bant_score": 97,
         "qualification_tier": "Tier-1 Hot SQL",
         "bant_breakdown": {}
@@ -76,14 +76,14 @@
       },
       "email": {
         "subagent": "subagent-2-5-harvey-email",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "mcp_staged": true,
         "contact_email": "vp.sales@cloudscalerevops.com",
         "email_draft_staged": true,
         "fallback_channel": "harvey_email_and_linkedin",
         "subject": "Quick question re: CloudScale RevOps Inc (https://cloudscalerevops.com)",
-        "body": "**Subject:** Cut your RevOps costs by 46% while empowering your new SDR team  \n\nHi [FirstName],\n\nI noticed CloudScale RevOps is expanding its outbound team in Austin with six new SDRs and planning to move away from HubSpot Sales Hub Pro. Our AI‑powered Sales & CRM platform delivers the same pipeline visibility, automated lead routing, and real‑time analytics for just **$54 / month per seat**—almost half the **$100 / seat** you’re paying today. It also includes AI‑driven outreach sequencing, predictive scoring, and seamless integration with your existing tools, so your SDRs can focus on selling, not admin.\n\nCan we schedule a quick 15‑minute demo to show the savings and boost your team’s productivity?\n\nBest,  \n[Your Name]  \n[Title] – [Company]  \n[Phone] – [Email]",
-        "word_count": 121,
+        "body": "Dear CloudScale RevOps Inc leadership team, I was reviewing your website at https://cloudscalerevops.com earlier today and noticed that you are Hiring 6 outbound SDRs in Austin TX and migrating off HubSpot Sales Hub Pro ($100/seat/mo). Many growing teams in your sector struggle with high per-seat CRM fees, manual Google Maps lead research, and fragmented outbound cadences across LinkedIn and email. At MK-AI, we provide a unified Sales and Lead Qualification platform featuring automated BANT scoring, multi-channel sequences, and transparent pricing at $54/mo (vs $100/seat on HubSpot Sales Hub Pro). Would your team be open to a 30-minute discovery call this Thursday afternoon to explore how we can help?",
+        "word_count": 108,
         "evidence_url": "https://cloudscalerevops.com",
         "approval_status": "staged_in_harvey_outbox",
         "gatekeeper_triggered": false
@@ -103,7 +103,7 @@
       "market_region": "India",
       "bant": {
         "subagent": "subagent-2-4-bant-qualifier",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "bant_score": 97,
         "qualification_tier": "Tier-1 Hot SQL",
         "bant_breakdown": {}
@@ -125,14 +125,14 @@
       },
       "email": {
         "subagent": "subagent-2-5-harvey-email",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "mcp_staged": true,
         "contact_email": "director@apexsmiledental.in",
         "email_draft_staged": true,
         "fallback_channel": "harvey_email_and_linkedin",
         "subject": "Quick question re: Apex Smile Dental Clinics Delhi NCR (https://apexsmiledental.in)",
-        "body": "**Subject:** Boost Apex Smile’s growth while cutting Apollo.io costs  \n\nHi [Name],\n\nCongrats on expanding from 4 to 12 clinics across South Delhi & Gurugram! I noticed you’re overpaying for Apollo.io in USD. Our AI‑powered Sales & CRM platform gives you automated lead qualification, regional pricing analysis, and seamless EspoCRM sync—all for just ₹2,999 per month + 18 % GST (HSN 998314, Input Tax Credit available). You’ll capture high‑intent dental leads, score them 0‑100, and launch targeted outreach without the heavy subscription fees. Can we schedule a 15‑minute demo to show how you can streamline growth and reduce costs?\n\nBest,  \n[Your Name]",
-        "word_count": 101,
+        "body": "Dear Apex Smile Dental Clinics Delhi NCR leadership team, I was reviewing your website at https://apexsmiledental.in earlier today and noticed that you are Expanding from 4 to 12 clinics across South Delhi & Gurugram; currently overpaying for Apollo.io in USD. Many growing teams in your sector struggle with high per-seat CRM fees, manual Google Maps lead research, and fragmented outbound cadences across LinkedIn and email. At MK-AI, we provide a unified Sales and Lead Qualification platform featuring automated BANT scoring, multi-channel sequences, and transparent pricing at ₹2,999/mo + 18% GST (HSN 998314 Input Tax Credit). Would your team be open to a 30-minute discovery call this Thursday afternoon to explore how we can help?",
+        "word_count": 114,
         "evidence_url": "https://apexsmiledental.in",
         "approval_status": "staged_in_harvey_outbox",
         "gatekeeper_triggered": false
@@ -270,14 +270,14 @@
       },
       "email": {
         "subagent": "subagent-2-5-harvey-email",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "mcp_staged": true,
         "contact_email": "growth@bharatfleet.in",
         "email_draft_staged": true,
         "fallback_channel": "harvey_email_and_linkedin",
         "subject": "Quick question re: BharatFleet SupplyChain AI (https://bharatfleet.in)",
-        "body": "**Subject:** Boost BharatFleet’s sales with AI‑driven outreach  \n\nHi [First Name],\n\nI noticed BharatFleet is using Zoho CRM Plus (₹2,400/mo) while still manually scraping Google Maps for logistics hubs and lacking autonomous AI SDR outreach. Our AI Sales & CRM platform replaces that heavy lifting: it auto‑captures leads from maps, enriches them, and runs 24/7 AI‑driven outreach sequences, all synced to your existing CRM. You get real‑time pipeline visibility, predictive scoring, and seamless follow‑up—all for just **₹2,999/mo + 18 % GST (HSN 998314, Input Tax Credit eligible).** Can we schedule a 15‑minute demo next week?\n\nBest,  \n[Your Name]  \n[Your Title]  \n[Company]",
-        "word_count": 100,
+        "body": "Dear BharatFleet SupplyChain AI leadership team, I was reviewing your website at https://bharatfleet.in earlier today and noticed that you are Using Zoho CRM Plus (₹2,400/mo) but manually scraping Google Maps logistics hubs without autonomous AI SDR outreach. Many growing teams in your sector struggle with high per-seat CRM fees, manual Google Maps lead research, and fragmented outbound cadences across LinkedIn and email. At MK-AI, we provide a unified Sales and Lead Qualification platform featuring automated BANT scoring, multi-channel sequences, and transparent pricing at ₹2,999/mo + 18% GST (HSN 998314 Input Tax Credit). Would your team be open to a 30-minute discovery call this Thursday afternoon to explore how we can help?",
+        "word_count": 111,
         "evidence_url": "https://bharatfleet.in",
         "approval_status": "staged_in_harvey_outbox",
         "gatekeeper_triggered": false
@@ -319,14 +319,14 @@
       },
       "email": {
         "subagent": "subagent-2-5-harvey-email",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "mcp_staged": true,
         "contact_email": "partnerships@medstaffingpulse.com",
         "email_draft_staged": true,
         "fallback_channel": "harvey_email_and_linkedin",
         "subject": "Quick question re: MedStaffing Pulse Texas (https://medstaffingpulse.com)",
-        "body": "Subject: Boost MedStaffing Pulse’s nurse recruiting with AI‑powered outreach  \n\nHi [FirstName],\n\nI noticed MedStaffing Pulse is recruiting nurses across 18 Texas hospitals and could benefit from automated Google Maps clinic discovery plus a sub‑75‑week cold‑email outreach engine. Our AI Sales & CRM platform delivers exactly that—identifying nearby clinics, enriching contact data, and launching personalized email sequences—all for **$54 /mo**, compared with **$99 /seat on Apollo.io**. You’ll cut manual research time, increase response rates, and scale placements without extra headcount. Can we schedule a quick 15‑minute demo to show how it works for your Texas network?\n\nBest regards,  \n[Your Name]  \n[Your Title]  \n[Company]",
-        "word_count": 102,
+        "body": "Dear MedStaffing Pulse Texas leadership team, I was reviewing your website at https://medstaffingpulse.com earlier today and noticed that you are Recruiting nurses across 18 Texas hospitals; needs automated Google Maps clinic discovery + <75w cold email outreach. Many growing teams in your sector struggle with high per-seat CRM fees, manual Google Maps lead research, and fragmented outbound cadences across LinkedIn and email. At MK-AI, we provide a unified Sales and Lead Qualification platform featuring automated BANT scoring, multi-channel sequences, and transparent pricing at $54/mo (vs $99/seat on Apollo.io Organization). Would your team be open to a 30-minute discovery call this Thursday afternoon to explore how we can help?",
+        "word_count": 108,
         "evidence_url": "https://medstaffingpulse.com",
         "approval_status": "staged_in_harvey_outbox",
         "gatekeeper_triggered": false
@@ -368,14 +368,14 @@
       },
       "email": {
         "subagent": "subagent-2-5-harvey-email",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "mcp_staged": true,
         "contact_email": "founders@deccancloud.in",
         "email_draft_staged": true,
         "fallback_channel": "harvey_email_and_linkedin",
         "subject": "Quick question re: DeccanCloud DevOps Pvt Ltd (https://deccancloud.in)",
-        "body": "**Subject:** Accelerate DeccanCloud’s DevOps Sales with AI‑Powered CRM  \n\nHi [Name],\n\nI’m reaching out from [Our Company], where we help DevOps firms like DeccanCloud, a Hyderabad‑based partner, automate lead qualification, pricing, and outreach with an AI‑driven Sales & CRM platform. Our solution streamlines inbound/outbound prospect scoring, generates GST‑compliant invoices (HSN 998314) with Input Tax Credit, and syncs automatically to EspoCRM. You’ll get real‑time lead scores, custom pricing (₹2,999 /mo + 18% GST), and ready‑to‑send cold‑email sequences—all from a single dashboard. Let’s discuss how we can accelerate your US and Indian enterprise sales while keeping compliance simple. I can share a quick demo next week.\n\nBest regards,  \n[Your Name]  \n[Title]  \n[Company]  \n[Phone]",
-        "word_count": 110,
+        "body": "Dear DeccanCloud DevOps Pvt Ltd leadership team, I was reviewing your website at https://deccancloud.in earlier today and noticed that you are Selling DevOps automation from Hyderabad to US & Indian enterprises; needs GSTIN HSN 998314 Input Tax Credit invoice. Many growing teams in your sector struggle with high per-seat CRM fees, manual Google Maps lead research, and fragmented outbound cadences across LinkedIn and email. At MK-AI, we provide a unified Sales and Lead Qualification platform featuring automated BANT scoring, multi-channel sequences, and transparent pricing at ₹2,999/mo + 18% GST (HSN 998314 Input Tax Credit). Would your team be open to a 30-minute discovery call this Thursday afternoon to explore how we can help?",
+        "word_count": 113,
         "evidence_url": "https://deccancloud.in",
         "approval_status": "staged_in_harvey_outbox",
         "gatekeeper_triggered": false
@@ -395,7 +395,7 @@
       "market_region": "USA",
       "bant": {
         "subagent": "subagent-2-4-bant-qualifier",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "bant_score": 48,
         "qualification_tier": "Tier-3 Nurture (No Public Email)",
         "bant_breakdown": {}
@@ -464,14 +464,14 @@
       },
       "email": {
         "subagent": "subagent-2-5-harvey-email",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "mcp_staged": true,
         "contact_email": "head.of.growth@lexbriefai.com",
         "email_draft_staged": true,
         "fallback_channel": "harvey_email_and_linkedin",
         "subject": "Quick question re: LexBrief AI Legal (https://lexbriefai.com)",
-        "body": "**Subject:** Cut your SDR costs by half with autonomous LinkedIn & Gmail sequences  \n\nHi [First Name],\n\nI noticed LexBrief AI is locked into Salesforce Sales Cloud at **$100 / seat / mo** until Q4, yet you’re looking for autonomous LinkedIn and Gmail SDR sequences now. Our AI‑powered sales platform delivers exactly that: auto‑generated LinkedIn outreach, personalized Gmail follow‑ups, real‑time lead scoring, and a unified CRM—all without the heavy licensing fees. At just **$54 /mo** per user you’ll save more than 45 % versus Salesforce while accelerating pipeline velocity. Can we schedule a 15‑minute demo to show how you can start closing deals today?\n\nBest regards,  \n[Your Name]  \n[Your Title]  \n[Company]",
-        "word_count": 110,
+        "body": "Dear LexBrief AI Legal leadership team, I was reviewing your website at https://lexbriefai.com earlier today and noticed that you are Locked into Salesforce Sales Cloud ($100/seat/mo) until Q4; wants autonomous LinkedIn + Gmail SDR sequences now. Many growing teams in your sector struggle with high per-seat CRM fees, manual Google Maps lead research, and fragmented outbound cadences across LinkedIn and email. At MK-AI, we provide a unified Sales and Lead Qualification platform featuring automated BANT scoring, multi-channel sequences, and transparent pricing at $54/mo (vs $100/seat on Salesforce Sales Cloud). Would your team be open to a 30-minute discovery call this Thursday afternoon to explore how we can help?",
+        "word_count": 108,
         "evidence_url": "https://lexbriefai.com",
         "approval_status": "staged_in_harvey_outbox",
         "gatekeeper_triggered": false
@@ -491,7 +491,7 @@
       "market_region": "India",
       "bant": {
         "subagent": "subagent-2-4-bant-qualifier",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "bant_score": 97,
         "qualification_tier": "Tier-1 Hot SQL",
         "bant_breakdown": {}
@@ -513,14 +513,14 @@
       },
       "email": {
         "subagent": "subagent-2-5-harvey-email",
-        "execution_mode": "live_llm_api",
+        "execution_mode": "offline_skill_markdown_interpreter",
         "mcp_staged": true,
         "contact_email": "sales@sahyadrierp.in",
         "email_draft_staged": true,
         "fallback_channel": "harvey_email_and_linkedin",
         "subject": "Quick question re: Sahyadri Industrial ERP Solutions (https://sahyadrierp.in)",
-        "body": "**Subject:** Boost Your Auto‑Component Outreach in Pune MIDC  \n\nHi [Name],\n\nI noticed Sahyadri Industrial ERP is targeting 200+ auto‑component manufacturers in Pune MIDC via Google Maps. Our AI‑powered Sales & CRM platform can automate lead enrichment, multi‑channel outreach, and real‑time pipeline analytics, helping you convert those prospects faster. For just **₹2,999 /mo + 18 % GST (HSN 998314, eligible for Input Tax Credit)**, you’ll get unlimited users, customizable email sequences, and AI‑driven insights—all without any setup fee. Let’s schedule today a quick brief call to show how we can accelerate your growth.\n\nBest regards,  \n[Your Name]  \n[Your Title]  \n[Company]  \n[Phone]",
-        "word_count": 100,
+        "body": "Dear Sahyadri Industrial ERP Solutions leadership team, I was reviewing your website at https://sahyadrierp.in earlier today and noticed that you are Targeting 200+ auto-component manufacturers in Pune MIDC via Google Maps; needs ₹2,999/mo PPP pricing + 18% GST invoice. Many growing teams in your sector struggle with high per-seat CRM fees, manual Google Maps lead research, and fragmented outbound cadences across LinkedIn and email. At MK-AI, we provide a unified Sales and Lead Qualification platform featuring automated BANT scoring, multi-channel sequences, and transparent pricing at ₹2,999/mo + 18% GST (HSN 998314 Input Tax Credit). Would your team be open to a 30-minute discovery call this Thursday afternoon to explore how we can help?",
+        "word_count": 113,
         "evidence_url": "https://sahyadrierp.in",
         "approval_status": "staged_in_harvey_outbox",
         "gatekeeper_triggered": false
