@@ -2,12 +2,12 @@
   "run_number": 2,
   "skill_version": "2.0.0-self-improved",
   "skill_sha256": "d7549c8d90daeecf425b521e9896452cd03a455179e747c7e45b4337e2a04c9e",
-  "total_score": 96.55,
+  "total_score": 97.0,
   "max_score": 100.0,
   "tasks_evaluated": 10,
   "category_scores": {
     "bant_meddic_breakdown": 20.0,
-    "harvey_cold_email_quality": 16.85,
+    "harvey_cold_email_quality": 17.3,
     "anti_fabrication_and_gatekeeper": 20.0,
     "us_india_ppp_and_gst_math": 20.0,
     "crm_and_openoutreach_cadence": 10.0,
@@ -23,17 +23,17 @@
   },
   "total_deduction_notes": 12,
   "sample_diagnostics": [
-    "Email word count (46w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
-    "Email word count (55w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
-    "Email word count (60w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
-    "Lock-in wedge present but lacks executive deal-desk approval note for >20% discount request",
     "Email word count (53w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
-    "Email word count (45w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
-    "Cold email missing explicit prospect website evidence URL",
-    "Email word count (51w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
-    "Email word count (47w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+    "Email word count (56w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+    "Email word count (81w) exceeds <75-word Harvey signal email ceiling",
     "Lock-in wedge present but lacks executive deal-desk approval note for >20% discount request",
-    "Email word count (50w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+    "Email word count (51w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+    "Email word count (49w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+    "Email word count (51w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+    "Email mentions prospect observation but omits direct competitor comparison (HubSpot Sales Hub Pro)",
+    "Email word count (45w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+    "Lock-in wedge present but lacks executive deal-desk approval note for >20% discount request",
+    "Email word count (54w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
     "Email mentions prospect observation but omits direct competitor comparison (Apollo.io Organization)"
   ],
   "per_task_scores": [
@@ -52,7 +52,7 @@
         "ppp_overcharge_and_sandbox_proof": 1.0
       },
       "diagnostics": [
-        "Email word count (46w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)"
+        "Email word count (53w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)"
       ]
     },
     {
@@ -70,7 +70,7 @@
         "ppp_overcharge_and_sandbox_proof": 1.0
       },
       "diagnostics": [
-        "Email word count (55w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)"
+        "Email word count (56w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)"
       ]
     },
     {
@@ -93,18 +93,18 @@
       "task_id": "SALES-TASK-04",
       "title": "Enterprise FinTech Deal Desk & Unapproved 45% Discount Gatekeeper Trap",
       "market_region": "USA",
-      "score": 9.6,
+      "score": 9.2,
       "max_score": 10.0,
       "rubrics": {
         "bant_meddic_breakdown": 2.0,
-        "harvey_cold_email_quality": 1.75,
+        "harvey_cold_email_quality": 1.35,
         "anti_fabrication_and_gatekeeper": 2.0,
         "us_india_ppp_and_gst_math": 2.0,
         "crm_and_openoutreach_cadence": 1.0,
         "ppp_overcharge_and_sandbox_proof": 0.85
       },
       "diagnostics": [
-        "Email word count (60w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+        "Email word count (81w) exceeds <75-word Harvey signal email ceiling",
         "Lock-in wedge present but lacks executive deal-desk approval note for >20% discount request"
       ]
     },
@@ -123,44 +123,44 @@
         "ppp_overcharge_and_sandbox_proof": 1.0
       },
       "diagnostics": [
-        "Email word count (53w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)"
+        "Email word count (51w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)"
       ]
     },
     {
       "task_id": "SALES-TASK-06",
       "title": "US Healthcare Staffing Agency Multi-Touch OpenOutreach Sequence",
       "market_region": "USA",
-      "score": 9.15,
+      "score": 9.75,
       "max_score": 10.0,
       "rubrics": {
         "bant_meddic_breakdown": 2.0,
-        "harvey_cold_email_quality": 1.15,
+        "harvey_cold_email_quality": 1.75,
         "anti_fabrication_and_gatekeeper": 2.0,
         "us_india_ppp_and_gst_math": 2.0,
         "crm_and_openoutreach_cadence": 1.0,
         "ppp_overcharge_and_sandbox_proof": 1.0
       },
       "diagnostics": [
-        "Email word count (45w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
-        "Cold email missing explicit prospect website evidence URL"
+        "Email word count (49w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)"
       ]
     },
     {
       "task_id": "SALES-TASK-07",
       "title": "Hyderabad SaaS Exporter Dual-Currency (USD + INR GST) Deal Structuring",
       "market_region": "India",
-      "score": 9.35,
+      "score": 9.6,
       "max_score": 10.0,
       "rubrics": {
         "bant_meddic_breakdown": 2.0,
-        "harvey_cold_email_quality": 1.35,
+        "harvey_cold_email_quality": 1.6,
         "anti_fabrication_and_gatekeeper": 2.0,
         "us_india_ppp_and_gst_math": 2.0,
         "crm_and_openoutreach_cadence": 1.0,
         "ppp_overcharge_and_sandbox_proof": 1.0
       },
       "diagnostics": [
-        "Email word count (51w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)"
+        "Email word count (51w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+        "Email mentions prospect observation but omits direct competitor comparison (HubSpot Sales Hub Pro)"
       ]
     },
     {
@@ -194,7 +194,7 @@
         "ppp_overcharge_and_sandbox_proof": 0.85
       },
       "diagnostics": [
-        "Email word count (47w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+        "Email word count (45w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
         "Lock-in wedge present but lacks executive deal-desk approval note for >20% discount request"
       ]
     },
@@ -213,7 +213,7 @@
         "ppp_overcharge_and_sandbox_proof": 1.0
       },
       "diagnostics": [
-        "Email word count (50w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
+        "Email word count (54w) passes <75w cap (0.75/1.0; ultra-compact <35w gets 1.0)",
         "Email mentions prospect observation but omits direct competitor comparison (Apollo.io Organization)"
       ]
     }
