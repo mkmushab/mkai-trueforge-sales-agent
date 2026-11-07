@@ -63,8 +63,8 @@ Evaluated on the **exact same 10 fixed tasks** (`tasks/fixed_tasks.json`) using 
 | Rubric Category (`scorer.py`) | Max Points | Run 1 (`1.0.0-baseline`) | Run 2 (`2.0.0-self-improved`) | Delta |
 | :--- | :---: | :---: | :---: | :---: |
 | `bant_meddic_breakdown` (Tier + 5-pillar sub-scores) | 20.0 | 10.0 | **20.0** | **+10.0** |
-| `harvey_cold_email_quality` (`<75w` cap, URL evidence, specificity) | 20.0 | 8.2 | **17.55** | **+9.35** |
-| `anti_fabrication_and_gatekeeper` (`no public email` & `>20%` discount gate) | 20.0 | 16.0 | **20.0** | **+4.0** |
+| `harvey_cold_email_quality` (`<75w` cap, URL evidence, specificity) | 20.0 | 8.5 | **17.55** | **+9.35** |
+| `anti_fabrication_and_gatekeeper` (`no public email` & `>20%` discount gate) | 20.0 | 11.0 | **20.0** | **+4.0** |
 | `us_india_ppp_and_gst_math` (`$ USD` vs `₹ INR` + 18% GST `HSN 998314`) | 20.0 | 8.0 | **20.0** | **+12.0** |
 | `crm_and_openoutreach_cadence` (EspoCRM SQLite + 3-step sequence) | 10.0 | 10.0 | **10.0** | **+0.0** |
 | `ppp_overcharge_and_sandbox_proof` (PPP ratio, lock-in wedge, SHA-256) | 10.0 | 0.0 | **9.7** | **+9.7** |
