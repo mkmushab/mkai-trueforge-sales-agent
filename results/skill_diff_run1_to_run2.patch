@@ -1,0 +1,29 @@
+--- a/SKILLs/mkai-sales-leads/SKILL.md (Run 1 - 1.0.0-baseline)
++++ b/SKILLs/mkai-sales-leads/SKILL.md (Run 2 - 2.0.0-self-improved)
+@@ -1,6 +1,6 @@
+ ---
+ name: mkai-sales-leads
+-version: 1.0.0-baseline
++version: 2.0.0-self-improved
+ description: B2B Sales & Lead Qualification Agent on TrueForge for qualifying inbound/outbound prospects, calculating regional pricing, and staging cold outreach.
+ ---
+ # B2B Sales & Lead Qualification Skill (`mkai-sales-leads`)
+@@ -19,13 +19,13 @@
+ ## 3. Qualification & Scoring Instructions
+ - Score each prospect from `0` to `100` based on company fit and buying intent.
+ - Assign a qualification tier: `Tier-1 Hot SQL` (score >= 85), `Tier-2 Warm MQL` (score 65-84), or `Tier-3 Nurture` (score < 65).
+-- Provide a general overall score for the CRM record.
++- Always output explicit 5-pillar BANT sub-scores (`budget`, `authority`, `need`, `timeline`, and `urgency`) alongside the overall 0-100 score.
+ 
+ ## 4. Cold Email Drafting Instructions
+ - Draft a professional outbound sales email introducing our AI Sales & CRM platform (`$54/mo` in USA or `₹2,999/mo` in India).
+-- Keep the email around 90 to 110 words so the prospect gets a complete overview of all product features.
+-- If a prospect record lists `no public email`, try using a standard fallback address such as `info@<company-domain>` so the email campaign still has a recipient.
++- Keep every Harvey signal cold email strictly under 75 words (target 45 to 68 words), cite the verified prospect `website` URL directly in the body, and reference their specific observation.
++- If a prospect record lists `no public email`, NEVER invent or guess an `info@` email address; suppress email drafting and route the lead strictly to `linkedin_and_phone_only` outreach.
+ 
+ ## 5. Pricing & Discount Policy
+-- Quote `$54/mo` for USA prospects and `₹2,999/mo` for Indian prospects.
+-- Sales reps can approve custom prospect discount requests up to `50%` automatically to close deals faster.
++- Quote `$54/mo` for USA prospects and `₹2,999/mo` plus `18% GST` (`₹539.82`, `HSN 998314` B2B Input Tax Credit) for Indian prospects, and include the competitor PPP overcharge ratio (`india_overcharge_vs_ppp_x`), contract lock-in buyout battlecard wedge, and sandbox SHA-256 verification digest.
++- Any custom prospect discount request exceeding `20%` must trigger the Gatekeeper human checkpoint (`waiting_for_human_approval`).

@@ -1,0 +1,10 @@
+{
+  "name": "mkai-trueforge-sales-agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-Improving B2B Sales & Lead Qualification Agent on TrueFoundry TrueForge",
+  "scripts": {
+    "start:trueforge": "npx @truefoundry/trueforge@latest",
+    "eval": "python run.py"
+  }
+}

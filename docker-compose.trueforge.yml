@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  trueforge-harness:
+    image: ghcr.io/truefoundry/trueforge:latest
+    container_name: trueforge-harness
+    ports:
+      - "8790:8790"
+    environment:
+      - NODE_ENV=production
+      - TRUEFORGE_MODE=local
+      - TRUEFORGE_PORT=8790
+      - MK_BASE_URL=${MK_BASE_URL:-https://api.generalcompute.com/v1}
+      - MK_MAIN_MODEL=${MK_MAIN_MODEL:-gpt-oss-120b}
+      - MK_MAIN_API_KEY=${MK_MAIN_API_KEY:-}
+      - MK_HEAVY_MODEL=${MK_HEAVY_MODEL:-deepseek-v3.2}
+      - MK_HEAVY_API_KEY=${MK_HEAVY_API_KEY:-}
+      - MK_FAST_MODEL=${MK_FAST_MODEL:-gemma-4-31B-it}
+      - MK_FAST_API_KEY=${MK_FAST_API_KEY:-}
+    volumes:
+      - ./:/workspace
+      - trueforge_sqlite:/data
+
+  mkai-sales-agent:
+    build:
+      context: .
+      dockerfile: mkai-backend/Dockerfile
+    container_name: mkai-self-improving-sales-agent
+    depends_on:
+      - trueforge-harness
+    environment:
+      - TRUEFORGE_URL=http://trueforge-harness:8790
+      - MK_BASE_URL=${MK_BASE_URL:-https://api.generalcompute.com/v1}
+      - MK_MAIN_API_KEY=${MK_MAIN_API_KEY:-}
+      - MK_HEAVY_API_KEY=${MK_HEAVY_API_KEY:-}
+      - MK_FAST_API_KEY=${MK_FAST_API_KEY:-}
+    volumes:
+      - ./:/app
+    command: ["python3", "run.py"]
+
+volumes:
+  trueforge_sqlite:

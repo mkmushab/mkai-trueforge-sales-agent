@@ -1,0 +1,15 @@
+# Secrets & Environment
+.env
+**/.env
+.env.*
+!.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Node
+node_modules/

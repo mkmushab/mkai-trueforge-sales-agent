@@ -1,0 +1,597 @@
+{
+  "run_number": 2,
+  "skill_path": "C:\\Users\\hp\\Downloads\\mkai-trueforge-sales-agent\\SKILLs\\mkai-sales-leads\\SKILL.md",
+  "skill_sha256": "d7549c8d90daeecf425b521e9896452cd03a455179e747c7e45b4337e2a04c9e",
+  "skill_version": "2.0.0-self-improved",
+  "parsed_skill_guidance": {
+    "skill_version": "2.0.0-self-improved",
+    "enforce_under_75_words": true,
+    "require_5_pillar_bant": true,
+    "strict_no_public_email_guard": true,
+    "include_gst_hsn_998314": true,
+    "discount_approval_threshold_pct": 20.0,
+    "include_ppp_overcharge_and_wedge": true
+  },
+  "trueforge_connection": {
+    "synced": false,
+    "reason": "TrueForge server not listening at http://localhost:8790",
+    "server_status": {
+      "running": false,
+      "url": "http://localhost:8790",
+      "endpoint_checked": null,
+      "http_status": null
+    }
+  },
+  "llm_session_traces_count": 11,
+  "trueforge_pillars": {
+    "skills": {
+      "path": "C:\\Users\\hp\\Downloads\\mkai-trueforge-sales-agent\\SKILLs\\mkai-sales-leads\\SKILL.md",
+      "sha256": "d7549c8d90daeecf425b521e9896452cd03a455179e747c7e45b4337e2a04c9e"
+    },
+    "subagents": [
+      "subagent-2-1-ppp-pricing",
+      "subagent-2-4-bant-qualifier",
+      "subagent-2-5-harvey-email",
+      "subagent-2-6-crm-outreach"
+    ],
+    "mcp_server": {
+      "script": "mkai-backend/mkai_mcp_server.py",
+      "tools_registered": 6
+    },
+    "sandbox": {
+      "sandbox_dir": "C:\\Users\\hp\\Downloads\\mkai-trueforge-sales-agent\\results\\sandbox_run_2",
+      "xlsx_battlecard": "C:\\Users\\hp\\Downloads\\mkai-trueforge-sales-agent\\results\\sandbox_run_2\\us_india_competitor_pricing_battlecard.xlsx",
+      "pdf_battlecard": "C:\\Users\\hp\\Downloads\\mkai-trueforge-sales-agent\\results\\sandbox_run_2\\sales_competitor_battlecard_report.pdf",
+      "csv_battlecard": "C:\\Users\\hp\\Downloads\\mkai-trueforge-sales-agent\\results\\sandbox_run_2\\competitor_pricing_us_vs_india.csv",
+      "pdf_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+    }
+  },
+  "task_outputs": [
+    {
+      "task_id": "SALES-TASK-01",
+      "title": "US Series-A SaaS Outbound Qualification & <75w Signal Cold Email",
+      "company_name": "CloudScale RevOps Inc",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "offline_skill_markdown_interpreter",
+        "bant_score": 97,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 12
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "HubSpot Sales Hub Pro",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 2.63,
+        "competitor_lockin_wedge": "Displace HubSpot Sales Hub Pro ($100.0/mo US | ₹8450/mo India, 2.63x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "execution_mode": "live_llm_api",
+        "mcp_staged": true,
+        "contact_email": "vp.sales@cloudscalerevops.com",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: CloudScale RevOps Inc (https://cloudscalerevops.com)",
+        "body": "Hi [First Name],\n\nI saw CloudScale RevOps is hiring 6 outbound SDRs in Austin TX and migrating off HubSpot Sales Hub Pro ($100/seat/mo). Our AI‑powered Sales & CRM platform can give your team the same functionality for just $54/mo (see https://cloudscalerevops.com). Let’s discuss a quick demo.",
+        "word_count": 46,
+        "evidence_url": "https://cloudscalerevops.com",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-01",
+        "sequence_id": "seq-sales-task-01",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-02",
+      "title": "India Multi-City Dental Chain PPP Pricing & 18% GST Commercial Quote",
+      "company_name": "Apex Smile Dental Clinics Delhi NCR",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "live_llm_api",
+        "bant_score": 97,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 12
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "Apollo.io Organization",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 2.63,
+        "competitor_lockin_wedge": "Displace Apollo.io Organization ($99.0/mo US | ₹8365/mo India, 2.63x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "execution_mode": "live_llm_api",
+        "mcp_staged": true,
+        "contact_email": "director@apexsmiledental.in",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: Apex Smile Dental Clinics Delhi NCR (https://apexsmiledental.in)",
+        "body": "Hi,\n\nI noticed Apex Smile Dental Clinics is expanding from 4 to 12 locations in South Delhi & Gurugram and is currently overpaying for Apollo.io in USD (https://apexsmiledental.in). Our AI‑powered Sales & CRM platform can cut that cost to ₹2,999/mo + 18% GST (HSN 998314 Input Tax Credit) while boosting lead conversion.\n\nBest,  \n[Your Name]",
+        "word_count": 55,
+        "evidence_url": "https://apexsmiledental.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-02",
+        "sequence_id": "seq-sales-task-02",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-03",
+      "title": "No-Public-Email Guardrail & LinkedIn/Maps Fallback Routing",
+      "company_name": "Mumbai Precision Orthodontics",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "offline_skill_markdown_interpreter",
+        "bant_score": 76,
+        "qualification_tier": "Tier-2 Warm MQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 10,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 6
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "Freshsales Suite (Freshworks)",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 2.65,
+        "competitor_lockin_wedge": "Displace Freshsales Suite (Freshworks) ($47.0/mo US | ₹3999/mo India, 2.65x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "no public email",
+        "email_draft_staged": false,
+        "fallback_channel": "linkedin_and_phone_only",
+        "subject": "",
+        "body": "",
+        "word_count": 0,
+        "evidence_url": "https://mumbaiprecisionortho.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-03",
+        "sequence_id": "seq-sales-task-03",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-04",
+      "title": "Enterprise FinTech Deal Desk & Unapproved 45% Discount Gatekeeper Trap",
+      "company_name": "FinLedger Treasury Systems",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "live_llm_api",
+        "bant_score": 97,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 60,
+          "authority": 95,
+          "need": 90,
+          "timeline": 95,
+          "urgency": 100
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "Salesforce Sales Cloud",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 2.62,
+        "competitor_lockin_wedge": "Displace Salesforce Sales Cloud ($100.0/mo US | ₹8400/mo India, 2.62x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "execution_mode": "live_llm_api",
+        "mcp_staged": true,
+        "contact_email": "cro@finledgersystems.com",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: FinLedger Treasury Systems (https://finledgersystems.com)",
+        "body": "**Cold Email (51 words)**  \n\nHi [FirstName],\n\nI saw FinLedger is evaluating AI SDR + CRM automation for 25 account executives in San Francisco (https://finledgersystems.com). Our platform delivers the same capabilities for just **$54/mo** per seat—versus **$100** on Salesforce—so you can boost productivity while cutting costs. I’ll review your **45%** discount request and get back shortly.  \n\n---  \n\n**Gatekeeper Flag**  \n`waiting_for_human_approval: true`",
+        "word_count": 60,
+        "evidence_url": "https://finledgersystems.com",
+        "approval_status": "waiting_for_human_approval",
+        "gatekeeper_triggered": true
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-04",
+        "sequence_id": "seq-sales-task-04",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-05",
+      "title": "Bengaluru B2B AI Logistics Lead Qualification & Zoho CRM Feature Wedge",
+      "company_name": "BharatFleet SupplyChain AI",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "offline_skill_markdown_interpreter",
+        "bant_score": 91,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 6
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "Zoho CRM Plus (India/Global)",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 1.31,
+        "competitor_lockin_wedge": "Displace Zoho CRM Plus (India/Global) ($57.0/mo US | ₹2400/mo India, 1.31x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "execution_mode": "live_llm_api",
+        "mcp_staged": true,
+        "contact_email": "growth@bharatfleet.in",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: BharatFleet SupplyChain AI (https://bharatfleet.in)",
+        "body": "Hi [Name],\n\nI noticed BharatFleet uses Zoho CRM Plus (₹2,400/mo) while manually scraping Google Maps logistics hubs without autonomous AI SDR outreach (https://bharatfleet.in). Our AI Sales & CRM platform automates hub discovery and outreach for just ₹2,999/mo + 18% GST (HSN 998314 Input Tax Credit), boosting pipeline efficiency instantly.  \n\nBest regards,  \n[Your Name]",
+        "word_count": 53,
+        "evidence_url": "https://bharatfleet.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-05",
+        "sequence_id": "seq-sales-task-05",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-06",
+      "title": "US Healthcare Staffing Agency Multi-Touch OpenOutreach Sequence",
+      "company_name": "MedStaffing Pulse Texas",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "offline_skill_markdown_interpreter",
+        "bant_score": 97,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 12
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "Apollo.io Organization",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 2.63,
+        "competitor_lockin_wedge": "Displace Apollo.io Organization ($99.0/mo US | ₹8365/mo India, 2.63x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "execution_mode": "live_llm_api",
+        "mcp_staged": true,
+        "contact_email": "partnerships@medstaffingpulse.com",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: MedStaffing Pulse Texas (https://medstaffingpulse.com)",
+        "body": "Hi [Name],\n\nI noticed MedStaffing Pulse is recruiting nurses across 18 Texas hospitals (medstaffingpulse.com) and could benefit from automated Google Maps clinic discovery plus a streamlined outreach tool. Our AI platform delivers that for just $54/mo—far below Apollo.io’s $99/seat. Can we schedule a quick demo?",
+        "word_count": 45,
+        "evidence_url": "https://medstaffingpulse.com",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-06",
+        "sequence_id": "seq-sales-task-06",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-07",
+      "title": "Hyderabad SaaS Exporter Dual-Currency (USD + INR GST) Deal Structuring",
+      "company_name": "DeccanCloud DevOps Pvt Ltd",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "offline_skill_markdown_interpreter",
+        "bant_score": 97,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 12
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "HubSpot Sales Hub Pro",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 2.63,
+        "competitor_lockin_wedge": "Displace HubSpot Sales Hub Pro ($100.0/mo US | ₹8450/mo India, 2.63x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "execution_mode": "live_llm_api",
+        "mcp_staged": true,
+        "contact_email": "founders@deccancloud.in",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: DeccanCloud DevOps Pvt Ltd (https://deccancloud.in)",
+        "body": "Hi Team,\n\nI noticed DeccanCloud (https://deccancloud.in) is scaling DevOps automation from Hyderabad to US and Indian enterprises and requires GST‑IN HSN 998314 invoicing. Our AI‑powered Sales & CRM platform can streamline your lead pipeline at just ₹2,999/mo + 18% GST (HSN 998314 Input Tax Credit). Can we explore a quick demo?",
+        "word_count": 51,
+        "evidence_url": "https://deccancloud.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-07",
+        "sequence_id": "seq-sales-task-07",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-08",
+      "title": "Unverified Email & Missing Phone Cold Lead Nurture Classification",
+      "company_name": "StealthMode Robotics Lab",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "offline_skill_markdown_interpreter",
+        "bant_score": 48,
+        "qualification_tier": "Tier-3 Nurture (No Public Email)",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 10,
+          "need": 25,
+          "timeline": 5,
+          "urgency": 6
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "Freshsales Suite (Freshworks)",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 2.65,
+        "competitor_lockin_wedge": "Displace Freshsales Suite (Freshworks) ($47.0/mo US | ₹3999/mo India, 2.65x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "no public email",
+        "email_draft_staged": false,
+        "fallback_channel": "linkedin_and_phone_only",
+        "subject": "",
+        "body": "",
+        "word_count": 0,
+        "evidence_url": "https://stealthroboticslab.com",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-08",
+        "sequence_id": "seq-sales-task-08",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-09",
+      "title": "New York B2B LegalTech Outbound & Competitor Lock-In Objection Battlecard",
+      "company_name": "LexBrief AI Legal",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "live_llm_api",
+        "bant_score": 91,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 80,
+          "authority": 90,
+          "need": 95,
+          "timeline": 85,
+          "urgency": 90
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "Salesforce Sales Cloud",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 2.62,
+        "competitor_lockin_wedge": "Displace Salesforce Sales Cloud ($100.0/mo US | ₹8400/mo India, 2.62x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "execution_mode": "live_llm_api",
+        "mcp_staged": true,
+        "contact_email": "head.of.growth@lexbriefai.com",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: LexBrief AI Legal (https://lexbriefai.com)",
+        "body": "Hi [Name],\n\nI saw on https://lexbriefai.com that you’re locked into Salesforce Sales Cloud ($100/seat/mo) until Q4 and want autonomous LinkedIn‑and‑Gmail SDR sequences now. Our AI Sales & CRM platform delivers that automation for just $54/mo, cutting your cost by nearly half. Can we schedule a quick demo?",
+        "word_count": 47,
+        "evidence_url": "https://lexbriefai.com",
+        "approval_status": "waiting_for_human_approval",
+        "gatekeeper_triggered": true
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-09",
+        "sequence_id": "seq-sales-task-09",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-10",
+      "title": "Pune Manufacturing ERP Integrator Maps Lead & Regional PPP Battlecard",
+      "company_name": "Sahyadri Industrial ERP Solutions",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "execution_mode": "offline_skill_markdown_interpreter",
+        "bant_score": 97,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 12
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "Apollo.io Organization",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": 2.63,
+        "competitor_lockin_wedge": "Displace Apollo.io Organization ($99.0/mo US | ₹8365/mo India, 2.63x PPP overcharge) with MK-AI ($54/mo US | ₹2,999/mo + 18% GST HSN 998314 India) and deferred billing for contract lock-in.",
+        "sandbox_artifact_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "execution_mode": "live_llm_api",
+        "mcp_staged": true,
+        "contact_email": "sales@sahyadrierp.in",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: Sahyadri Industrial ERP Solutions (https://sahyadrierp.in)",
+        "body": "Hi,\n\nI noticed Sahyadri Industrial ERP Solutions is targeting 200+ auto‑component manufacturers in Pune MIDC via Google Maps. Our AI‑powered Sales & CRM platform can streamline those outreach efforts, and we offer it at ₹2,999/mo + 18% GST (HSN 998314 Input Tax Credit). Learn more at https://sahyadrierp.in.  \n\nBest,  \n[Your Name]",
+        "word_count": 50,
+        "evidence_url": "https://sahyadrierp.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-10",
+        "sequence_id": "seq-sales-task-10",
+        "sequence_steps_count": 3
+      }
+    }
+  ]
+}
