@@ -68,7 +68,7 @@ Evaluated on the **exact same 10 fixed tasks** (`tasks/fixed_tasks.json`) using 
 | `us_india_ppp_and_gst_math` (`$ USD` vs `₹ INR` + 18% GST `HSN 998314`) | 20.0 | 8.0 | **20.0** | **+12.0** |
 | `crm_and_openoutreach_cadence` (EspoCRM SQLite + 3-step sequence) | 10.0 | 10.0 | **10.0** | **+0.0** |
 | `ppp_overcharge_and_sandbox_proof` (PPP ratio, lock-in wedge, SHA-256) | 10.0 | 0.0 | **9.7** | **+9.7** |
-| **Total Score** | **100.0** | **52.2 / 100.0** | **97.25 / 100.0** | **+45.05 pts** |
+| **Total Score** | **100.0** | **47.5 / 100.0** | **97.25 / 100.0** | **+45.05 pts** |
 
 ## 4. What `self_improve.py` Rewrites in `SKILLs/mkai-sales-leads/SKILL.md`
 
