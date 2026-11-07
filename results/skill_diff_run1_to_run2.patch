@@ -1,0 +1,60 @@
+--- a/SKILLs/mkai-sales-leads/SKILL.md (1.0.0-baseline)
++++ b/SKILLs/mkai-sales-leads/SKILL.md (2.0.0-self-improved)
+@@ -1,6 +1,6 @@
+ ---
+ name: mkai-sales-leads
+-version: 1.0.0-baseline
++version: 2.0.0-self-improved
+ description: Flagship #1 Self-Improving Revenue & Sales Agent running on TrueForge (@truefoundry/trueforge) with Skills, 4 Parallel Subagents, MCP Server, and Sandbox verification.
+ ---
+ # 2. Sales & Lead Qualification Agent (Flagship #1 — TrueForge Self-Improving Agent) (`mkai-02-sales`)
+@@ -24,12 +24,12 @@
+ 
+ <!-- TRUEFORGE_SKILL_RULES
+ {
+-  "skill_version": "1.0.0-baseline",
+-  "max_cold_email_words": 110,
+-  "require_5_pillar_bant_breakdown": false,
+-  "enforce_no_public_email_guardrail": false,
+-  "include_india_gst_hsn_998314": false,
+-  "gatekeeper_discount_approval_max_pct": 50.0,
++  "skill_version": "2.0.0-self-improved",
++  "max_cold_email_words": 68,
++  "require_5_pillar_bant_breakdown": true,
++  "enforce_no_public_email_guardrail": true,
++  "include_india_gst_hsn_998314": true,
++  "gatekeeper_discount_approval_max_pct": 20.0,
+   "include_ppp_overcharge_multiplier": false,
+   "include_competitor_lockin_wedge": false
+ }
+@@ -71,10 +71,18 @@
+ 
+ ## 4. Workflow
+ 1. **TrueForge 4-Pillar Execution**: Loads `SKILL.md` rules, dispatches the 4 parallel Sales Subagents (`2.1`, `2.4`, `2.5`, `2.6`), calls `mkai_mcp_server.py` MCP tools, and verifies battlecards in the Sandbox.
+-2. **Active Self-Improved Execution Directives (`1.0.0-baseline`)**:
+-- Baseline v1.0 execution policy (uncalibrated defaults).
++2. **Active Self-Improved Execution Directives (`2.0.0-self-improved`)**:
++- `STRICT_WORD_LIMIT_UNDER_75`: Every Harvey cold email MUST be strictly under 75 words (target 40-68 words) and cite the verified prospect `website` URL.
++- `REQUIRE_5_PILLAR_BANT_SUBSCORES`: Every lead qualification output MUST include explicit sub-scores for all 5 pillars (`budget`, `authority`, `need`, `timeline`, `urgency`).
++- `STRICT_NO_PUBLIC_EMAIL_GUARDRAIL`: When `contact_email` is `'no public email'`, NEVER guess or fabricate `info@` emails; set `email_draft_staged: false` and route to `'linkedin_and_phone_only'`.
++- `INCLUDE_INDIA_18PCT_GST_HSN_998314`: Always calculate India 18% GST (`₹539.82` on `₹2,999/mo`) and attach `HSN 998314` Input Tax Credit metadata.
++- `GATEKEEPER_DISCOUNT_THRESHOLD_20PCT`: Any requested discount > 20% MUST trigger the TrueForge Human Checkpoint (`approval_status: 'waiting_for_human_approval'`).
+ 3. **Self-Improvement Reflection History**:
+-- Run 1 Baseline initialized with default uncalibrated skill parameters.
++- Diagnosed `[R1_BANT_5_PILLARS]` in Run 1 (Score 50.0/100): Rewrote Subagent 2.4 instructions to output explicit 5-pillar BANT/MEDDIC sub-scores (`budget`, `authority`, `need`, `timeline`, `urgency`).
++- Diagnosed `[R2_WORD_COUNT_OVER_75]`: Tightened Subagent 2.5 Harvey cold email word ceiling from 110 words down to 68 words (`<75w` hard cap) with mandatory prospect `website` evidence URL.
++- Diagnosed `[R3_FABRICATED_EMAIL]`: Enabled strict `'no public email'` anti-fabrication guardrail — prohibited guessing `info@` addresses and routed missing-email leads to `'linkedin_and_phone_only'`.
++- Diagnosed `[R3_MISSING_APPROVAL_GATE]`: Lowered Gatekeeper commercial discount approval threshold from 50% to 20% (`waiting_for_human_approval`).
++- Diagnosed `[R4_MISSING_GST_HSN_998314]`: Added mandatory India 18% GST (`₹539.82`) and `HSN 998314` B2B Input Tax Credit calculation to Subagent 2.1.
+ 
+ ## 5. Output Schema
+ - Structured JSON & Markdown executive summary with 5-pillar BANT/MEDDIC breakdown, USA (`$ USD`) vs. India (`₹ INR` + 18% GST `HSN 998314`) pricing math, Harvey `<75w` cold email draft, and 3-step OpenOutreach sequence.
+@@ -83,7 +91,7 @@
+ ## 6. Approval Gates
+ - Sending external cold emails via Gmail (`ASK` Gatekeeper confirmation required)
+ - Sending LinkedIn connection requests or InMails (`ASK` Gatekeeper confirmation required)
+-- Approving commercial discounts exceeding `50.0%` (`ASK` Gatekeeper confirmation required)
++- Approving commercial discounts exceeding `20.0%` (`ASK` Gatekeeper confirmation required)
+ - Mutating live production CRM deal stages (`ASK` Gatekeeper confirmation required)
+ 
+ ## 7. Failure Behaviour

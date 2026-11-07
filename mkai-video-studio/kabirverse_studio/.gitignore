@@ -1,0 +1,10 @@
+.env
+state/
+logs/
+outputs/*
+!outputs/.gitkeep
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.temp-audio.m4a

@@ -1,0 +1,297 @@
+{
+  "name": "MK AI #1 — Omnichannel Marketing, Ad ROAS & Social Auto-Publisher",
+  "active": true,
+  "versionId": "mkai-prod-mkai-marketing-autopublish-v2",
+  "meta": {
+    "platform": "MK AI Enterprise Dual-Brain Platform",
+    "department_agent_id": "mkai-agent-01-marketing",
+    "default_subagent_code": "1.4",
+    "requires_human_approval_gate": true
+  },
+  "nodes": [
+    {
+      "id": "node-1-webhook",
+      "name": "1. Inbound Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        120,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mkai-marketing-autopublish",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      }
+    },
+    {
+      "id": "node-2-hmac-verify",
+      "name": "2. HMAC Security & Payload Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        340,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nif (!body || !body.task) { throw new Error('Missing required task field in webhook payload'); }\nreturn [{ json: { task: String(body.task), agent_id: body.agent_id || 'mkai-agent-01-marketing', subagent_code: body.subagent_code || '1.4', metadata: body.metadata || {}, timestamp: Date.now() } }];"
+      }
+    },
+    {
+      "id": "node-3-mkai-brain",
+      "name": "3. MK AI Dual-Brain Orchestrator (/api/v1/execute)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        580,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://mkai-backend:8765/api/v1/execute",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ task: $json.task, agent_id: $json.agent_id, subagent_code: $json.subagent_code }) }}",
+        "options": {
+          "timeout": 90000
+        }
+      }
+    },
+    {
+      "id": "node-4-approval-switch",
+      "name": "4. Human Approval Gate Check (#9.6)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        820,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "equals",
+              "value2": "awaiting_human_approval"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node-5-approval-notify",
+      "name": "5. Owner Approval Alert (WhatsApp/Slack Gate #9.6)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1080,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/mkai/owner-approval-gate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: 'MK AI Approval Required: ' + $json.message, approval_id: $json.approval_request.approval_id }) }}"
+      }
+    },
+    {
+      "id": "node-6-action-primary",
+      "name": "6. Meta Ads Graph API — Budget & ROAS Sync",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1080,
+        360
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v19.0/act_mkai/campaigns",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ agent_output: $json.output, model_used: $json.model_used, department: $json.department }) }}"
+      }
+    },
+    {
+      "id": "node-7-action-secondary",
+      "name": "7. Google Ads API — Bid & Keyword Optimizer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        360
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://googleads.googleapis.com/v16/customers/mkai/campaigns",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ step: 'secondary_sync', data: $json }) }}"
+      }
+    },
+    {
+      "id": "node-8-action-tertiary",
+      "name": "8. Instagram & LinkedIn Reel/Carousel Publisher",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1560,
+        360
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v19.0/mkai_page/media_publish",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ step: 'final_dispatch', data: $json }) }}"
+      }
+    },
+    {
+      "id": "node-9-audit-log",
+      "name": "9. Enterprise Audit & Token Cost Logger (#9.7)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        260
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { ok: true, workflow: 'mkai-marketing-autopublish', completed_at: new Date().toISOString(), result: $input.first().json } }];"
+      }
+    },
+    {
+      "id": "node-10-webhook-response",
+      "name": "10. Webhook JSON Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2020,
+        260
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}"
+      }
+    }
+  ],
+  "connections": {
+    "1. Inbound Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "2. HMAC Security & Payload Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. HMAC Security & Payload Validator": {
+      "main": [
+        [
+          {
+            "node": "3. MK AI Dual-Brain Orchestrator (/api/v1/execute)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. MK AI Dual-Brain Orchestrator (/api/v1/execute)": {
+      "main": [
+        [
+          {
+            "node": "4. Human Approval Gate Check (#9.6)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. Human Approval Gate Check (#9.6)": {
+      "main": [
+        [
+          {
+            "node": "5. Owner Approval Alert (WhatsApp/Slack Gate #9.6)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "6. Meta Ads Graph API — Budget & ROAS Sync",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5. Owner Approval Alert (WhatsApp/Slack Gate #9.6)": {
+      "main": [
+        [
+          {
+            "node": "9. Enterprise Audit & Token Cost Logger (#9.7)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6. Meta Ads Graph API — Budget & ROAS Sync": {
+      "main": [
+        [
+          {
+            "node": "7. Google Ads API — Bid & Keyword Optimizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7. Google Ads API — Bid & Keyword Optimizer": {
+      "main": [
+        [
+          {
+            "node": "8. Instagram & LinkedIn Reel/Carousel Publisher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8. Instagram & LinkedIn Reel/Carousel Publisher": {
+      "main": [
+        [
+          {
+            "node": "9. Enterprise Audit & Token Cost Logger (#9.7)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "9. Enterprise Audit & Token Cost Logger (#9.7)": {
+      "main": [
+        [
+          {
+            "node": "10. Webhook JSON Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

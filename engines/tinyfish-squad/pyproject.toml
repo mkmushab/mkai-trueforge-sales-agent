@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tinyfish-squad"
+version = "1.0.0"
+description = "Standalone 4-Agent Web Squad (Lead Hunter, Competitor Watch, Content Scout, Opportunity Radar) with dry-run, retries, and credit guards"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"

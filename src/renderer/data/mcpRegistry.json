@@ -1,0 +1,477 @@
+{
+  "categories": [
+    {
+      "id": "all",
+      "name_zh": "All",
+      "name_en": "All"
+    },
+    {
+      "id": "search",
+      "name_zh": "Search",
+      "name_en": "Search"
+    },
+    {
+      "id": "developer",
+      "name_zh": "Dev Tools",
+      "name_en": "Dev Tools"
+    },
+    {
+      "id": "productivity",
+      "name_zh": "Productivity",
+      "name_en": "Productivity"
+    },
+    {
+      "id": "browser",
+      "name_zh": "Browser",
+      "name_en": "Browser"
+    },
+    {
+      "id": "design",
+      "name_zh": "Design",
+      "name_en": "Design"
+    },
+    {
+      "id": "data-api",
+      "name_zh": "Data & API",
+      "name_en": "Data & API"
+    }
+  ],
+  "servers": [
+    {
+      "id": "mkai-chatgpt-super-bridge",
+      "name": "ChatGPT Super-Bridge (Canva + DALL-E + JSON Prompt Compiler)",
+      "description_en": "Connects MK AI to your logged-in ChatGPT (Canva, DALL-E, Code Interpreter) using zero-token-waste JSON Super-Prompts.",
+      "description_zh": "Connects MK AI to your logged-in ChatGPT (Canva, DALL-E, Code Interpreter) using zero-token-waste JSON Super-Prompts.",
+      "category": "productivity",
+      "transportType": "http",
+      "url": "http://127.0.0.1:8765/api/v1/compile-super-prompt",
+      "defaultArgs": [],
+      "official": true
+    },
+    {
+      "id": "mkai-claude-super-bridge",
+      "name": "Claude AI Super-Bridge (Artifacts + MCP Skills + JSON Compiler)",
+      "description_en": "Connects MK AI to Claude AI & local Claude CLI (Interactive Artifacts, GitHub, MCP Connectors) via JSON Super-Prompts.",
+      "description_zh": "Connects MK AI to Claude AI & local Claude CLI (Interactive Artifacts, GitHub, MCP Connectors) via JSON Super-Prompts.",
+      "category": "developer",
+      "transportType": "http",
+      "url": "http://127.0.0.1:8765/api/v1/compile-super-prompt",
+      "defaultArgs": [],
+      "official": true
+    },
+    {
+      "id": "mkai-gemini-super-bridge",
+      "name": "Google Gemini Super-Bridge (Workspace Skills + Imagen + Search)",
+      "description_en": "Connects MK AI to Google Gemini & local Gemini CLI (Google Docs/Sheets/Slides, Imagen, Live Search Grounding).",
+      "description_zh": "Connects MK AI to Google Gemini & local Gemini CLI (Google Docs/Sheets/Slides, Imagen, Live Search Grounding).",
+      "category": "search",
+      "transportType": "http",
+      "url": "http://127.0.0.1:8765/api/v1/compile-super-prompt",
+      "defaultArgs": [],
+      "official": true
+    },
+    {
+      "id": "mkai-stealth-web-agent",
+      "name": "MK-AI Stealth Web Scraper (Firecrawl + Browser-Use + Scrapling)",
+      "description_en": "95% Invisible background Chrome scraper (Port 9222) + 5% Human Login/CAPTCHA assist. Beats TinyFish & Context.dev.",
+      "description_zh": "95% Invisible background Chrome scraper (Port 9222) + 5% Human Login/CAPTCHA assist. Beats TinyFish & Context.dev.",
+      "category": "browser",
+      "transportType": "http",
+      "url": "http://127.0.0.1:8765/api/v1/stealth-scrape",
+      "defaultArgs": [],
+      "official": true
+    },
+    {
+      "id": "mkai-github-repo-importer",
+      "name": "1-Click GitHub Repository Connector (Any GitHub Repo -> Agent Skill)",
+      "description_en": "Connect any GitHub repository (firecrawl, browser-use, Scrapling, etc.) directly into MK AI's 30-agent workforce.",
+      "description_zh": "Connect any GitHub repository (firecrawl, browser-use, Scrapling, etc.) directly into MK AI's 30-agent workforce.",
+      "category": "developer",
+      "transportType": "http",
+      "url": "http://127.0.0.1:8765/api/v1/github/install",
+      "defaultArgs": [],
+      "official": true
+    },
+    {
+      "id": "mkai-dual-brain-mcp",
+      "name": "MK AI Dual-Brain (CrewAI + n8n + 30 Agents)",
+      "description": "Connects MK AI Desktop directly to the local CrewAI + n8n Dual-Brain Orchestrator, Multi-Model Router (gpt-oss-120b / deepseek-v3.2 / gemma-4-31B-it), and Open-Source Agent Adapters.",
+      "category": "productivity",
+      "transportType": "stdio",
+      "command": "python3",
+      "args": [
+        "mkai-backend/mkai_mcp_server.py"
+      ],
+      "official": true,
+      "description_en": "Connects MK AI Desktop directly to the local CrewAI + n8n Dual-Brain Orchestrator, Multi-Model Router (gpt-oss-120b / deepseek-v3.2 / gemma-4-31B-it), and Open-Source Agent Adapters.",
+      "description_zh": "Connects MK AI Desktop directly to the local CrewAI + n8n Dual-Brain Orchestrator, Multi-Model Router (gpt-oss-120b / deepseek-v3.2 / gemma-4-31B-it), and Open-Source Agent Adapters."
+    },
+    {
+      "id": "tinyfish",
+      "name": "TinyFish Web Agent Service",
+      "description_zh": "TinyFish Web Agent & 4-Agent Squad Service Connector (HTTP MCP transport; moved from Model Picker to Connectors)",
+      "description_en": "TinyFish Web Agent & 4-Agent Squad Service Connector (HTTP MCP transport; moved from Model Picker to Connectors)",
+      "category": "browser",
+      "transportType": "http",
+      "url": "https://agent.tinyfish.ai/mcp",
+      "requiredEnvKeys": [
+        "TINYFISH_API_KEY"
+      ],
+      "official": true
+    },
+    {
+      "id": "tavily",
+      "name": "Tavily",
+      "description_zh": "Real-time web search, intelligent data extraction and web crawling",
+      "description_en": "Real-time web search, intelligent data extraction and web crawling",
+      "category": "search",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "tavily-mcp@latest"
+      ],
+      "requiredEnvKeys": [
+        "TAVILY_API_KEY"
+      ]
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "description_zh": "GitHub platform integration: repos, issues, PRs, Actions management",
+      "description_en": "GitHub platform integration: repos, issues, PRs, Actions management",
+      "category": "developer",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "requiredEnvKeys": [
+        "GITHUB_PERSONAL_ACCESS_TOKEN"
+      ]
+    },
+    {
+      "id": "gitlab",
+      "name": "GitLab",
+      "description_zh": "GitLab API integration: project management, merge requests, pipelines",
+      "description_en": "GitLab API integration: project management, merge requests, pipelines",
+      "category": "developer",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@modelcontextprotocol/server-gitlab"
+      ],
+      "requiredEnvKeys": [
+        "GITLAB_PERSONAL_ACCESS_TOKEN"
+      ],
+      "optionalEnvKeys": [
+        "GITLAB_API_URL"
+      ]
+    },
+    {
+      "id": "context7",
+      "name": "Context7",
+      "description_zh": "Up-to-date library documentation and code examples for AI coding",
+      "description_en": "Up-to-date library documentation and code examples for AI coding",
+      "category": "developer",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ]
+    },
+    {
+      "id": "google-drive",
+      "name": "Google Drive",
+      "description_zh": "Google Drive file access and search with auto-export for Workspace files",
+      "description_en": "Google Drive file access and search with auto-export for Workspace files",
+      "category": "productivity",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@modelcontextprotocol/server-gdrive"
+      ],
+      "optionalEnvKeys": [
+        "GDRIVE_CREDENTIALS_PATH"
+      ]
+    },
+    {
+      "id": "gmail",
+      "name": "Gmail",
+      "description_zh": "Gmail management: read, send, search emails with auto authentication",
+      "description_en": "Gmail management: read, send, search emails with auto authentication",
+      "category": "productivity",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@gongrzhe/server-gmail-autoauth-mcp"
+      ],
+      "requiredEnvKeys": [
+        "GMAIL_CLIENT_ID",
+        "GMAIL_CLIENT_SECRET",
+        "GMAIL_REDIRECT_URI"
+      ]
+    },
+    {
+      "id": "google-calendar",
+      "name": "Google Calendar",
+      "description_zh": "Google Calendar management: create, query, update calendar events",
+      "description_en": "Google Calendar management: create, query, update calendar events",
+      "category": "productivity",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@cocal/google-calendar-mcp"
+      ],
+      "requiredEnvKeys": [
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "GOOGLE_REDIRECT_URI"
+      ]
+    },
+    {
+      "id": "notion",
+      "name": "Notion",
+      "description_zh": "Notion API: search, create/update pages, manage databases",
+      "description_en": "Notion API: search, create/update pages, manage databases",
+      "category": "productivity",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@notionhq/notion-mcp-server"
+      ],
+      "requiredEnvKeys": [
+        "OPENAPI_MCP_HEADERS"
+      ]
+    },
+    {
+      "id": "slack",
+      "name": "Slack",
+      "description_zh": "Slack workspace: channel management, messaging, user queries",
+      "description_en": "Slack workspace: channel management, messaging, user queries",
+      "category": "productivity",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@modelcontextprotocol/server-slack"
+      ],
+      "requiredEnvKeys": [
+        "SLACK_BOT_TOKEN",
+        "SLACK_TEAM_ID"
+      ]
+    },
+    {
+      "id": "todoist",
+      "name": "TodoList",
+      "description_zh": "Task management: create, update, complete and organize to-do items",
+      "description_en": "Task management: create, update, complete and organize to-do items",
+      "category": "productivity",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "todoist-mcp@latest"
+      ],
+      "requiredEnvKeys": [
+        "TODOIST_API_TOKEN"
+      ]
+    },
+    {
+      "id": "playwright",
+      "name": "Playwright",
+      "description_zh": "Advanced browser automation supporting Chromium/Firefox/WebKit",
+      "description_en": "Advanced browser automation supporting Chromium/Firefox/WebKit",
+      "category": "browser",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@executeautomation/playwright-mcp-server"
+      ]
+    },
+    {
+      "id": "figma",
+      "name": "Figma",
+      "description_zh": "Figma design platform integration: read files, components, styles, and parse designs",
+      "description_en": "Figma design platform integration: read files, components, styles, and parse designs",
+      "category": "design",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "figma-developer-mcp@latest"
+      ],
+      "requiredEnvKeys": [
+        "FIGMA_API_KEY"
+      ]
+    },
+    {
+      "id": "canva",
+      "name": "Canva",
+      "description_zh": "Canva design platform: create and manage designs, template operations",
+      "description_en": "Canva design platform: create and manage designs, template operations",
+      "category": "design",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@iflow-mcp/mattcoatsworth-canva-mcp-server"
+      ],
+      "requiredEnvKeys": [
+        "CANVA_API_KEY"
+      ]
+    },
+    {
+      "id": "firecrawl",
+      "name": "Firecrawl",
+      "description_zh": "Web scraping and data extraction: batch processing, structured extraction and content analysis",
+      "description_en": "Web scraping and data extraction: batch processing, structured extraction and content analysis",
+      "category": "data-api",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "firecrawl-mcp@latest"
+      ],
+      "requiredEnvKeys": [
+        "FIRECRAWL_API_KEY"
+      ]
+    },
+    {
+      "id": "fetch",
+      "name": "Fetch",
+      "description_zh": "Web content fetching and HTML-to-markdown conversion for LLM consumption",
+      "description_en": "Web content fetching and HTML-to-markdown conversion for LLM consumption",
+      "category": "data-api",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ]
+    },
+    {
+      "id": "github-official",
+      "name": "GitHub Official (github-mcp-server)",
+      "description_zh": "Official github/github-mcp-server: read tools auto; create issue/PR, push, merge go through the approval gate.",
+      "description_en": "Official github/github-mcp-server: read tools auto; create issue/PR, push, merge go through the approval gate.",
+      "category": "developer",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "requiredEnvKeys": [
+        "GITHUB_PERSONAL_ACCESS_TOKEN"
+      ],
+      "official": true
+    },
+    {
+      "id": "playwright-headed",
+      "name": "Browser (Playwright Headed MCP)",
+      "description_zh": "microsoft/playwright-mcp in headed mode with persistent profile ~/.mkai/browser-profile and Pause/Resume/Take over/Stop controls.",
+      "description_en": "microsoft/playwright-mcp in headed mode with persistent profile ~/.mkai/browser-profile and Pause/Resume/Take over/Stop controls.",
+      "category": "browser",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--user-data-dir",
+        "~/.mkai/browser-profile"
+      ],
+      "official": true
+    },
+    {
+      "id": "chrome-devtools",
+      "name": "Chrome DevTools MCP",
+      "description_zh": "ChromeDevTools/chrome-devtools-mcp for QA, performance traces, network and console inspection.",
+      "description_en": "ChromeDevTools/chrome-devtools-mcp for QA, performance traces, network and console inspection.",
+      "category": "developer",
+      "transportType": "stdio",
+      "command": "npx",
+      "defaultArgs": [
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ],
+      "official": true
+    },
+    {
+      "id": "maps-leads",
+      "name": "Maps Leads (gosom/google-maps-scraper)",
+      "description_zh": "Custom MCP adapter over gosom/google-maps-scraper REST API (127.0.0.1:8080). Tools: maps_leads_search, maps_job_status, maps_download_csv.",
+      "description_en": "Custom MCP adapter over gosom/google-maps-scraper REST API (127.0.0.1:8080). Tools: maps_leads_search, maps_job_status, maps_download_csv.",
+      "category": "data-api",
+      "transportType": "stdio",
+      "command": "python3",
+      "defaultArgs": [
+        "mkai-backend/mkai_mcp_server.py"
+      ],
+      "optionalEnvKeys": [
+        "GOSOM_MAPS_API_URL"
+      ],
+      "official": true
+    },
+    {
+      "id": "harvey-bridge",
+      "name": "Harvey Autonomous Sales Bridge",
+      "description_zh": "Read-only status, outbox (<75w drafts), and replies bridge over ethanplusai/harvey in strict approval mode.",
+      "description_en": "Read-only status, outbox (<75w drafts), and replies bridge over ethanplusai/harvey in strict approval mode.",
+      "category": "productivity",
+      "transportType": "stdio",
+      "command": "python3",
+      "defaultArgs": [
+        "mkai-backend/mkai_mcp_server.py"
+      ],
+      "official": true
+    },
+    {
+      "id": "video-studio",
+      "name": "Video Studio (MoneyPrinterTurbo + brag)",
+      "description_zh": "Custom adapter over MoneyPrinterTurbo API and latent-spaces/brag. Tools: video_generate, launch_video.",
+      "description_en": "Custom adapter over MoneyPrinterTurbo API and latent-spaces/brag. Tools: video_generate, launch_video.",
+      "category": "design",
+      "transportType": "stdio",
+      "command": "python3",
+      "defaultArgs": [
+        "mkai-backend/mkai_mcp_server.py"
+      ],
+      "official": true
+    },
+    {
+      "id": "internshala-readonly",
+      "name": "Internshala Read-Only MCP",
+      "description_zh": "Read-only Playwright MCP: internshala_search_internships(query, location, min_stipend), get_listing(url). Never applies automatically.",
+      "description_en": "Read-only Playwright MCP: internshala_search_internships(query, location, min_stipend), get_listing(url). Never applies automatically.",
+      "category": "search",
+      "transportType": "stdio",
+      "command": "python3",
+      "defaultArgs": [
+        "mkai-backend/mkai_mcp_server.py"
+      ],
+      "official": true
+    },
+    {
+      "id": "linkedin-assisted",
+      "name": "LinkedIn Assisted Mode MCP",
+      "description_zh": "Assisted read-only mode in user visible window. Capped pages per session, first-run consent required, no bulk export, no auto-connect/message/apply.",
+      "description_en": "Assisted read-only mode in user visible window. Capped pages per session, first-run consent required, no bulk export, no auto-connect/message/apply.",
+      "category": "browser",
+      "transportType": "stdio",
+      "command": "python3",
+      "defaultArgs": [
+        "mkai-backend/mkai_mcp_server.py"
+      ],
+      "official": true
+    }
+  ]
+}

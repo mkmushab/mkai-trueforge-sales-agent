@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  mkai-backend:
+    build:
+      context: ./mkai-backend
+    container_name: mkai-dual-brain-backend
+    ports:
+      - "8765:8765"
+    env_file:
+      - ./.env
+    environment:
+      - MK_BACKEND_HOST=0.0.0.0
+      - MK_BACKEND_PORT=8765
+    volumes:
+      - mkai_backend_data:/app/data
+    restart: unless-stopped
+
+  mkai-n8n:
+    image: n8nio/n8n:1.82.3
+    container_name: mkai-n8n-engine
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-mkai_admin}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD:-MKAI_Secure_2026!}
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=Asia/Kolkata
+    volumes:
+      - mkai_n8n_data:/home/node/.n8n
+      - ./mkai-backend/n8n_workflows:/home/node/mkai_workflows:ro
+    restart: unless-stopped
+
+volumes:
+  mkai_backend_data:
+  mkai_n8n_data:

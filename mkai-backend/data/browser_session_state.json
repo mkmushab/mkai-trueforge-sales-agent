@@ -1,0 +1,55 @@
+{
+  "status": "running",
+  "headed": true,
+  "profile_dir": "/working_dir/.mkai/browser-profile",
+  "current_url": "file:///tmp/mkai_e2e__fo5k3wy/www/clinic_4.html",
+  "current_domain": "",
+  "allowed_domains": [],
+  "pages_visited_in_run": 4,
+  "max_pages_per_run": 5,
+  "linkedin_consent_accepted": false,
+  "steps": [
+    {
+      "step": 1,
+      "url": "file:///tmp/mkai_e2e__fo5k3wy/www/clinic_1.html",
+      "domain": "local",
+      "title": "Dwarka Sector 4 Dental Studio #1",
+      "http_status": 200,
+      "screenshot_path": "/working_dir/c_33f1cce55d83fc18/inspect_zip/mkai-backend/data/browser_screenshots/step_01_local.png",
+      "console_errors": [],
+      "timestamp": 1794062143.59502
+    },
+    {
+      "step": 2,
+      "url": "file:///tmp/mkai_e2e__fo5k3wy/www/clinic_2.html",
+      "domain": "local",
+      "title": "Dwarka Sector 5 Dental Studio #2",
+      "http_status": 200,
+      "screenshot_path": "/working_dir/c_33f1cce55d83fc18/inspect_zip/mkai-backend/data/browser_screenshots/step_02_local.png",
+      "console_errors": [],
+      "timestamp": 1794062143.6054487
+    },
+    {
+      "step": 3,
+      "url": "file:///tmp/mkai_e2e__fo5k3wy/www/clinic_3.html",
+      "domain": "local",
+      "title": "Dwarka Sector 6 Dental Studio #3",
+      "http_status": 200,
+      "screenshot_path": "/working_dir/c_33f1cce55d83fc18/inspect_zip/mkai-backend/data/browser_screenshots/step_03_local.png",
+      "console_errors": [],
+      "timestamp": 1794062143.6123126
+    },
+    {
+      "step": 4,
+      "url": "file:///tmp/mkai_e2e__fo5k3wy/www/clinic_4.html",
+      "domain": "local",
+      "title": "Dwarka Sector 7 Dental Studio #4",
+      "http_status": 200,
+      "screenshot_path": "/working_dir/c_33f1cce55d83fc18/inspect_zip/mkai-backend/data/browser_screenshots/step_04_local.png",
+      "console_errors": [],
+      "timestamp": 1794062143.6256938
+    }
+  ],
+  "console_logs": [],
+  "last_updated": 1794062143.6256983
+}

@@ -1,0 +1,60 @@
+name: Welcome
+
+on:
+  pull_request_target:
+    types: [opened]
+  issues:
+    types: [opened]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/first-interaction@2ec0f0fd78838633cd1c1342e4536d49ef72be54 # v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            👋   Issue  LobsterAI  
+
+             
+            -   Issue  
+            -   Issue 
+            -  Bug  
+
+             
+
+            ---
+
+            👋 Thanks for opening your first issue! We appreciate your contribution to LobsterAI.
+
+            Please make sure you've:
+            - Filled out the issue template completely
+            - Searched for existing issues to avoid duplicates
+            - Provided steps to reproduce (for bugs)
+
+            We'll review your issue as soon as possible.
+          pr-message: |
+            👋   Pull Request  LobsterAI  
+
+              PR  
+            -   [Conventional Commits](https://www.conventionalcommits.org/)  
+            -  
+            - UI  
+            -   CI  
+
+              Review 
+
+            ---
+
+            👋 Thanks for your first pull request to LobsterAI! We appreciate your contribution.
+
+            Please make sure your PR:
+            - Follows the [Conventional Commits](https://www.conventionalcommits.org/) spec
+            - Includes a clear description of the changes
+            - Has screenshots for UI changes
+            - Passes all CI checks
+
+            A maintainer will review your PR soon. Thank you! 🚀

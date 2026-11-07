@@ -1,0 +1,102 @@
+{
+  "skills": {
+    "canvas-design": {
+      "sha256": "ef97bb41cedd8e33c4f66938084c1c112f44ccfd32533ac283729a53d8273c77",
+      "signature": "8e1ddc294c57f71466bd9c1ed097a2f99e69a14a4ac43652ddc4aab66240b631"
+    },
+    "content-planner": {
+      "sha256": "9d9696c1e8723edf58351bc3785b2353164ef1f06051a73372d52433ce5518a5",
+      "signature": "939a67eedcbe96c9d7d3c1e1a90606e5135ad2674cdf29112be85d232128f8ea"
+    },
+    "create-plan": {
+      "sha256": "cc56e80de14a2d61c9b85684bba533a77c7aac295bac45c35db8b3a174438b93",
+      "signature": "b32fcef773c35a419b372941a060a38939cf411a6c36ee5ed96d6da0fed7d8c1"
+    },
+    "develop-web-game": {
+      "sha256": "29b745be7676792534e7682d6046b0953aaf008fee99c668c7d31a2e5953eb17",
+      "signature": "631537e13033033de4e975acd5d847108d5b1fe99520f688a7b05a32038881a0"
+    },
+    "docx": {
+      "sha256": "6c07fb81bf69521e8868b31f2ab36bcb5adbf215b1796e311753e6880694ccc4",
+      "signature": "369eb484c0ca82c1a0c552e3cad46ef5d017a0c7494d37109afd8acc708dc54b"
+    },
+    "frontend-design": {
+      "sha256": "6e0837b3ee51d51fe2fbed8a00496fd1457c1157f6540fd3b56924dcb0b76fcb",
+      "signature": "2bb10c5b9e7574130124068efa34c454530db055d0220faf845882b77655af3c"
+    },
+    "imap-smtp-email": {
+      "sha256": "7618eba1281ce8ce91144281718cbaff395f09f627b3026baf92424dd31fa8fd",
+      "signature": "8f60b11755d5dd02a5a1fcfe90c674215fa6d1fa7ad6cb657b8c17e2333c21b9"
+    },
+    "local-tools": {
+      "sha256": "29288674c46d42f7aeff32ab3ed56e010a05c745594cef0da499dd8227a4af17",
+      "signature": "4864097c7e842fafb39352f2e9998bdc1c839eddb1b56945ec32749f20519d70"
+    },
+    "mkai-customer-support": {
+      "sha256": "23f1a3cc0f03d0c1110391cee737094a4bd2c31e36a98306d9f861ae57c71ffb",
+      "signature": "480f19b4e43719ba280402e1f8107b59f6ee72ce824e98d5009d145476ecd1c9"
+    },
+    "mkai-fundraising-ir": {
+      "sha256": "ac2ae86ff77233b9090cdaf6dd6f1f21c8bc377b5e46fe44e927f025073680e5",
+      "signature": "6450fe79d044027bb08cbd7ad2c1e00092869be620b77741a8e05b3e9f65b4aa"
+    },
+    "mkai-marketing-campaign": {
+      "sha256": "a8c75a12c946c133c94adc976389d1eabe02d776154a112f3b63f5bba579b9b7",
+      "signature": "28a3daff5d6f3812112254b0db6f73e7ed9a74dc54cd2392781974c4f625fa87"
+    },
+    "mkai-research-intelligence": {
+      "sha256": "5ee3c874098336a606498784f361d64fe27ab67cfd2eca54b74efd12f580b7bd",
+      "signature": "17e95e165fc5e2d6a104b7a1a07dc0c8394920ca93750eff55d3e767c38f464d"
+    },
+    "mkai-sales-leads": {
+      "sha256": "b141a1cedeeca5a77a0f33b5c84e570385dd242af699747999029ea33eefc53e",
+      "signature": "c941259aa88a3a16441a1b665494c9d761cb8ed2321cfbaedf6c1f2d1ee7461a"
+    },
+    "mkai-strategy-ceo": {
+      "sha256": "127312e9b1b49191abda8e31ba5c6e7476c636e094358c016d8890af4f8505d8",
+      "signature": "822540eaad12af3579aee273e0cdd4fe834ab055a28b01b24ea528c65af2b4c9"
+    },
+    "pdf": {
+      "sha256": "8db85c56955d26eeb37afa14fc838bd00351b695d640674203b720313d564192",
+      "signature": "0932582535e85aeb3a16d8601bd1fa59379a71f2e32210f3728cf6d6d09c9a84"
+    },
+    "playwright": {
+      "sha256": "ea742100596ee2ee86a0c9b01c2fb8dfdf658bdb0144d3c8edd4d8cfb6bf1327",
+      "signature": "476a9fa9ce22fd22a744df12e2785fa6561b69110f832b9940f3e69ebb55fef0"
+    },
+    "pptx": {
+      "sha256": "edb26b913054faf80049c2f7c734f9771df1fb54da970e37cd152209a0660bd6",
+      "signature": "45a64045d70e88e9b39cd44357c3f1edef815ee4db02d1a27149196c8b9fd272"
+    },
+    "remotion": {
+      "sha256": "eb655c66b0018604c737a647a31812a29f2e4520c8354af9236fe3938d8d5992",
+      "signature": "2bb7b2b43693d9502b63b1eb062168f5e96efb4f4ac3699a580c9dfb74aaeec9"
+    },
+    "skill-creator": {
+      "sha256": "44e031e202d1f0a8658beb9de4235a6bdcdfee153869ddbcdc7bc1841e594378",
+      "signature": "5d99b6c4b369433cf54f1f338b246d299ceb3230eb4c83e52153a9b1def51f37"
+    },
+    "skill-vetter": {
+      "sha256": "e8eb7583355c2ae78a79187dca6a1ec448d9c8360e91652871392179f7ffb8bf",
+      "signature": "936a065d8add414fedfeaac2a5b8c3ee6b6b23057ea4e4a04f1cdc718b9327d0"
+    },
+    "skin-creator": {
+      "sha256": "3d48e8e139d0b0187766a3537b7c48cf717db1be92830275c2c3929eb6bda530",
+      "signature": "a31b4f51ceb3256ef6ad3a128a5548908e245d37a2464fec2d417d31027314f8"
+    },
+    "weather": {
+      "sha256": "c8a8b1e35b94ac502497f766b04bb630d26f1f2344d3cd92728322ee9d8f336b",
+      "signature": "05a3e42d00b6bf52fb77fc30177062dbd638dedb699762778b34f2c419b0283a"
+    },
+    "web-search": {
+      "sha256": "7bdb1be29172baa85d712a1f75f4f9347eed30a6da98100f54454b5ffa1b82b8",
+      "signature": "3f5ab5e69d41458f73a42e7e1dc33762cae9350b9df61ebd7abb2207818be520"
+    },
+    "xlsx": {
+      "sha256": "14e2afb42cf65b30ef455a53e0132db4c7fae6705d3cbc41a8c93aaf0d6a4496",
+      "signature": "f98a81b057ebcb3b7e99392ac6df89d8b6edcfdacb6e76ece492d06007a45f53"
+    }
+  },
+  "total_signed_skills": 24,
+  "version": "2.0"
+}

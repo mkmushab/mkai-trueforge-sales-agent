@@ -1,0 +1,63 @@
+{
+  "version": 2,
+  "description": "TrueForge & MK-AI v6.2 Skill Pack Configuration (Self-Improving Sales & Leads Flagship + Core Orchestra)",
+  "defaults": {
+    "mkai-sales-leads": {
+      "order": 1,
+      "enabled": true,
+      "selfImproving": true
+    },
+    "mkai-marketing-campaign": {
+      "order": 2,
+      "enabled": true
+    },
+    "mkai-research-intelligence": {
+      "order": 3,
+      "enabled": true
+    },
+    "mkai-strategy-ceo": {
+      "order": 4,
+      "enabled": true
+    },
+    "mkai-fundraising-ir": {
+      "order": 5,
+      "enabled": true
+    },
+    "mkai-customer-support": {
+      "order": 6,
+      "enabled": true
+    },
+    "web-search": {
+      "order": 10,
+      "enabled": true
+    },
+    "playwright": {
+      "order": 11,
+      "enabled": true
+    },
+    "xlsx": {
+      "order": 12,
+      "enabled": true
+    },
+    "pdf": {
+      "order": 13,
+      "enabled": true
+    },
+    "docx": {
+      "order": 14,
+      "enabled": true
+    },
+    "pptx": {
+      "order": 15,
+      "enabled": true
+    },
+    "skill-creator": {
+      "order": 20,
+      "enabled": true
+    },
+    "skill-vetter": {
+      "order": 21,
+      "enabled": true
+    }
+  }
+}

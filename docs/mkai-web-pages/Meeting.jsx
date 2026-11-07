@@ -1,0 +1,1139 @@
+import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
+
+// ─── HARDCODED GEMINI API KEY ─────────────────────────────────────────────────
+// Replace the value below with your actual Gemini API key
+const GEMINI_API_KEY = "YOUR_API_KEY_PLACEHOLDER";
+
+// ─── GEMINI FILE READER ───────────────────────────────────────────────────────
+async function readFileWithAI(file, apiKey) {
+  if (!apiKey) throw new Error("API key required");
+  const toBase64 = f => new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result.split(",")[1]);
+    r.onerror = () => rej(new Error("Read failed"));
+    r.readAsDataURL(f);
+  });
+  const base64 = await toBase64(file);
+  const mime = file.type || "application/octet-stream";
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{
+          parts: [
+            { inline_data: { mime_type: mime, data: base64 } },
+            { text: "Extract and return the complete full text content of this document. Return only the raw text, no commentary, no formatting, no markdown." }
+          ]
+        }]
+      })
+    }
+  );
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error?.message || "AI read failed");
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+}
+
+// ─── GENERAL COMPUTE API CALL (OpenAI-compatible, GPT-OSS 120B) ───────────────
+const GC_API_KEY = "YOUR_API_KEY_PLACEHOLDER";
+const GC_BASE_URL = "https://api.generalcompute.com";
+const GC_MODEL = "gpt-oss-120b";
+
+async function callGroq(messages, max_tokens = 4500) {
+  const res = await fetch(`${GC_BASE_URL}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${GC_API_KEY}`,
+    },
+    body: JSON.stringify({ model: GC_MODEL, max_tokens, temperature: 0.4, messages }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error?.message || "API request failed");
+  const text = data.choices[0].message.content || "";
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error("JSON not found");
+  return JSON.parse(match[0]);
+}
+
+// ─── PDF DOWNLOAD ─────────────────────────────────────────────────────────────
+function downloadPDF(htmlContent, filename = "document.pdf") {
+  const w = window.open("", "_blank");
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${filename.replace(".pdf","")}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#122420;padding:36px;font-size:13px;line-height:1.75}
+    h1{font-size:24px;font-weight:800;color:#122420;border-bottom:3px solid #0FA968;padding-bottom:12px;margin-bottom:22px}
+    h2{font-size:15px;font-weight:700;color:#122420;margin:22px 0 10px;background:#eafaf1;padding:8px 14px;border-radius:6px;border-left:4px solid #0FA968}
+    h3{font-size:13px;font-weight:700;color:#334155;margin:12px 0 6px}
+    p,li{color:#475569;margin-bottom:6px}ul{padding-left:18px}
+    table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12px}
+    th{background:#eafaf1;padding:9px 13px;text-align:left;font-weight:700;color:#0C8457;border:1px solid #a7f3d0}
+    td{padding:9px 13px;border:1px solid #e2e8f0;color:#475569;vertical-align:top}
+    tr:nth-child(even) td{background:#f8fafc}
+    .badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:10px;font-weight:700}
+    .badge-high{background:#fee2e2;color:#dc2626}.badge-med{background:#fef3c7;color:#B8791F}.badge-low{background:#dcfce7;color:#0C8457}
+    .summary{background:#f8fafc;border-left:4px solid #0FA968;padding:12px 16px;border-radius:4px;margin:10px 0}
+    .meta{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+    .meta-item{background:#fff7e6;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;color:#9A6415}
+    .stat-row{display:flex;gap:14px;margin-bottom:20px}
+    .stat{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;text-align:center;flex:1}
+    .stat-num{font-size:22px;font-weight:900;color:#0FA968}.stat-label{font-size:10px;color:#94a3b8;font-weight:600;letter-spacing:.4px}
+    .footer{margin-top:32px;padding-top:14px;border-top:2px solid #e2e8f0;font-size:11px;color:#94a3b8;text-align:center}
+    blockquote{border-left:3px solid #1596D6;padding:8px 14px;background:#eff8fd;color:#475569;margin:8px 0;font-style:italic}
+    .section{margin-bottom:20px;page-break-inside:avoid}
+    @media print{body{padding:0}}
+  </style></head><body>${htmlContent}
+  <div class="footer">Generated by MK-AI Tool Suite • ${new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})}</div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(() => w.print(), 700);
+}
+
+// ─── STATIC DATA ──────────────────────────────────────────────────────────────
+const TOOLS = [
+  { id:"meeting", icon:"📋", name:"Meeting Summarizer",
+    desc:"Paste notes or transcript — AI extracts action items, decisions, follow-ups, risks, and writes the follow-up email.",
+    tags:["Transcript","Action Items","Decisions","Follow-up Email","PDF"], color:"#0FA968", bg:"rgba(15,169,104,.08)" },
+  { id:"email", icon:"📧", name:"Email Writer",
+    desc:"Generate professional emails for any context — cold outreach, follow-ups, proposals, apologies — with PDF download.",
+    tags:["Cold Outreach","Follow-up","Proposal","Apology","PDF"], color:"#1596D6", bg:"rgba(21,150,214,.08)" },
+  { id:"contract", icon:"📝", name:"Contract Generator",
+    desc:"AI drafts complete legally-structured contracts — service agreements, NDAs, freelance, employment. Download as PDF.",
+    tags:["NDA","Service Agreement","Freelance","Employment","PDF"], color:"#F2A93B", bg:"rgba(242,169,59,.10)" },
+  { id:"legal", icon:"⚖️", name:"Legal Document Helper",
+    desc:"Upload or paste any legal document — AI analyzes clauses, risks, and explains everything in plain language.",
+    tags:["Document Analysis","Clause Review","Risk Check","Plain English","PDF"], color:"#0C8457", bg:"rgba(12,132,87,.08)" },
+];
+
+const MEETING_TYPES = ["Team Standup","Project Review","Client Meeting","Strategy Meeting","Brainstorming","Interview","All Hands","General"];
+const LANGUAGES = ["English","Hinglish","Hindi"];
+const EMAIL_TYPES = ["Cold Outreach","Follow-up","Project Proposal","Apology","Invoice Request","Client Update","Partnership","Thank You","Meeting Request","General"];
+const CONTRACT_TYPES = ["Service Agreement","NDA (Non-Disclosure)","Freelance Contract","Employment Contract","Consulting Agreement","Vendor Agreement","Partnership Agreement","Lease / Rental"];
+const LEGAL_ACTIONS = ["Summarize Document","Identify Key Clauses","Risk Assessment","Plain English Explanation","Compare Two Versions","Check Compliance"];
+const TONES = ["Formal & Professional","Friendly & Warm","Assertive & Direct","Concise & Brief","Persuasive"];
+
+// ─── UPLOAD ZONE COMPONENT ────────────────────────────────────────────────────
+function UploadZone({ file, onFile, onRemove, accept = ".txt,.pdf,.doc,.docx,.md", label = "Upload Document" }) {
+  const [drag, setDrag] = useState(false);
+  const inputRef = useRef();
+  const handleFiles = (files) => {
+    if (!files?.length) return;
+    onFile({ file: files[0], text: "" });
+  };
+  if (file) return (
+    <div className="file-attached">
+      <span style={{fontSize:20}}>📄</span>
+      <div>
+        <div className="file-attached-name">{file.name}</div>
+        <div style={{fontSize:11,color:"var(--muted)",marginTop:2}}>{(file.size/1024).toFixed(1)} KB</div>
+      </div>
+      <button className="file-remove" onClick={onRemove} title="Remove">✕</button>
+    </div>
+  );
+  return (
+    <div className={`upload-zone ${drag ? "drag" : ""}`}
+      onDragOver={e => { e.preventDefault(); setDrag(true); }}
+      onDragLeave={() => setDrag(false)}
+      onDrop={e => { e.preventDefault(); setDrag(false); handleFiles(e.dataTransfer.files); }}
+      onClick={() => inputRef.current?.click()}>
+      <input ref={inputRef} type="file" accept={accept} onChange={e => handleFiles(e.target.files)} style={{display:"none"}}/>
+      <span className="upload-icon">📂</span>
+      <div className="upload-title">{label}</div>
+      <div className="upload-sub">Drag & drop here, or</div>
+      <div className="upload-btn-fake">Browse File</div>
+      <div className="upload-sub" style={{marginTop:8,fontSize:11}}>Supports: TXT, PDF, DOC, DOCX, MD</div>
+    </div>
+  );
+}
+
+// ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
+export default function Meeting() {
+  const navigate = useNavigate();
+
+  const [activeTool, setActiveTool] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
+  const [result, setResult] = useState(null);
+  const [toast, setToast] = useState("");
+  const [activeTab, setActiveTab] = useState("");
+
+  // API key is hardcoded — no user input needed
+  const apiKey = GEMINI_API_KEY;
+
+  // Meeting state
+  const [mText, setMText] = useState("");
+  const [mName, setMName] = useState("");
+  const [mAttendees, setMAttendees] = useState("");
+  const [mType, setMType] = useState("");
+  const [mLang, setMLang] = useState("English");
+  const [mFile, setMFile] = useState(null);
+
+  // Email state
+  const [eType, setEType] = useState("");
+  const [eCtx, setECtx] = useState("");
+  const [eSender, setESender] = useState("");
+  const [eRecip, setERecip] = useState("");
+  const [eTone, setETone] = useState("Formal & Professional");
+  const [eLang, setELang] = useState("English");
+  const [eFile, setEFile] = useState(null);
+
+  // Contract state
+  const [cType, setCType] = useState("");
+  const [cPartyA, setCPartyA] = useState("");
+  const [cPartyB, setCPartyB] = useState("");
+  const [cScope, setCScope] = useState("");
+  const [cDur, setCDur] = useState("");
+  const [cVal, setCVal] = useState("");
+  const [cJur, setCJur] = useState("");
+  const [cFile, setCFile] = useState(null);
+
+  // Legal state
+  const [lAction, setLAction] = useState("");
+  const [lText, setLText] = useState("");
+  const [lText2, setLText2] = useState("");
+  const [lFile, setLFile] = useState(null);
+  const [lFile2, setLFile2] = useState(null);
+
+  const showToast = m => { setToast(m); setTimeout(() => setToast(""), 2800); };
+  const goTool = id => { setActiveTool(id); setResult(null); setActiveTab(""); };
+  const goHome = () => { setActiveTool(null); setResult(null); };
+  const scoreColor = s => s >= 70 ? "#0FA968" : s >= 50 ? "#F2A93B" : "#DC2626";
+
+  // Extract text from uploaded file using Gemini AI, fallback to plain text
+  const extractFileText = async (fileObj) => {
+    if (!fileObj) return "";
+    const f = fileObj.file;
+    if (apiKey && (f.type === "application/pdf" || f.type.includes("word") || f.name.endsWith(".docx") || f.name.endsWith(".doc"))) {
+      try {
+        setStatus("📄 Reading file...");
+        const text = await readFileWithAI(f, apiKey);
+        return text;
+      } catch (e) {
+        // Fallback to plain text read if AI extraction fails
+      }
+    }
+    return new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = e => res(e.target.result);
+      r.onerror = () => rej(new Error("Read failed"));
+      r.readAsText(f);
+    });
+  };
+
+  // ── MEETING GENERATOR ─────────────────────────────────────────────────────────
+  const genMeeting = async () => {
+    setLoading(true); setResult(null);
+    try {
+      const text = mFile ? await extractFileText(mFile) : mText;
+      if (!text.trim()) { setLoading(false); return; }
+      setStatus("🧠 Analyzing meeting...");
+      const data = await callGroq([
+        { role:"system", content:"You are MK-AI Meeting Summarizer. Return ONLY valid JSON — no markdown, no backticks." },
+        { role:"user", content:`Summarize this ${mType||"General"} meeting:
+Meeting Name: ${mName||"Meeting"}
+Date: ${new Date().toLocaleDateString("en-IN")}
+Attendees: ${mAttendees||"Not specified"}
+Type: ${mType||"General"}
+Language: ${mLang}
+Content:
+${text}
+Return ONLY:
+{"meeting_title":"","executive_summary":"","key_discussions":[{"topic":"","summary":"","outcome":""}],"decisions_made":[{"decision":"","decided_by":"","impact":""}],"action_items":[{"task":"","assigned_to":"","deadline":"","priority":"High/Medium/Low"}],"follow_ups":[{"item":"","responsible":"","due_date":""}],"blockers":[],"risks_identified":[],"opportunities":[],"key_quotes":[],"next_meeting":{"suggested_date":"","agenda":[]},"sentiment":"Positive/Neutral/Negative","meeting_effectiveness":78,"email_subject":"","email_body":""}` }
+      ]);
+      setResult({ type:"meeting", ...data });
+      setActiveTab("summary");
+      showToast("✅ Meeting summarized!");
+    } catch (e) {
+      setStatus("❌ Error! Try again.");
+    }
+    setLoading(false); setStatus("");
+  };
+
+  // ── EMAIL GENERATOR ───────────────────────────────────────────────────────────
+  const genEmail = async () => {
+    setLoading(true); setResult(null);
+    try {
+      const ctx = eFile ? await extractFileText(eFile) : eCtx;
+      if (!ctx.trim() || !eType) { setLoading(false); return; }
+      setStatus("✍️ Drafting email...");
+      const data = await callGroq([
+        { role:"system", content:"You are a professional email writing expert. Return ONLY valid JSON." },
+        { role:"user", content:`Write a ${eType} email.
+Context: ${ctx}
+Sender: ${eSender||"[Sender]"}
+Recipient: ${eRecip||"[Recipient]"}
+Tone: ${eTone}
+Language: ${eLang}
+Return ONLY:
+{"subject":"","email_body":"","alt_subjects":["",""],"key_points":["","",""],"tone_used":"","tips":["",""],"follow_up_timing":"","subject_line_strength":"Strong/Average/Weak","email_score":85,"improvements":["",""]}` }
+      ]);
+      setResult({ type:"email", ...data });
+      setActiveTab("email_main");
+      showToast("📧 Email ready!");
+    } catch (e) {
+      setStatus("❌ Error! Try again.");
+    }
+    setLoading(false); setStatus("");
+  };
+
+  // ── CONTRACT GENERATOR ────────────────────────────────────────────────────────
+  const genContract = async () => {
+    setLoading(true); setResult(null);
+    try {
+      const scope = cFile ? await extractFileText(cFile) : cScope;
+      if (!cType || !cPartyA || !cPartyB || !scope) { setLoading(false); return; }
+      setStatus("📝 Drafting contract...");
+      const data = await callGroq([
+        { role:"system", content:"You are a legal contract drafting expert. Return ONLY valid JSON." },
+        { role:"user", content:`Draft a ${cType}:
+Party A: ${cPartyA}
+Party B: ${cPartyB}
+Scope: ${scope}
+Duration: ${cDur||"Not specified"}
+Value: ${cVal||"As agreed"}
+Jurisdiction: ${cJur||"India"}
+Date: ${new Date().toLocaleDateString("en-IN")}
+Return ONLY:
+{"contract_title":"","parties":{"party_a":"","party_b":""},"effective_date":"","recitals":"","scope_of_work":"","payment_terms":"","duration_and_termination":"","confidentiality":"","intellectual_property":"","liability_and_indemnity":"","dispute_resolution":"","general_clauses":["","",""],"signatures_block":"","key_obligations_A":["",""],"key_obligations_B":["",""],"risk_flags":["",""],"recommendations":["",""]}` }
+      ], 5000);
+      setResult({ type:"contract", ...data });
+      setActiveTab("contract_full");
+      showToast("📝 Contract ready!");
+    } catch (e) {
+      setStatus("❌ Error! Try again.");
+    }
+    setLoading(false); setStatus("");
+  };
+
+  // ── LEGAL DOCUMENT ANALYZER ───────────────────────────────────────────────────
+  const genLegal = async () => {
+    setLoading(true); setResult(null);
+    try {
+      const text = lFile ? await extractFileText(lFile) : lText;
+      const text2 = lFile2 ? await extractFileText(lFile2) : lText2;
+      if (!text.trim() || !lAction) { setLoading(false); return; }
+      setStatus("⚖️ Analyzing document...");
+      const data = await callGroq([
+        { role:"system", content:"You are a legal document analysis expert. Return ONLY valid JSON." },
+        { role:"user", content:`Action: ${lAction}
+Document 1:
+${text}
+${text2 ? `\nDocument 2:\n${text2}` : ""}
+Return ONLY:
+{"document_type":"","summary":"","key_clauses":[{"clause_name":"","plain_english":"","risk_level":"High/Medium/Low","notes":""}],"parties_identified":[],"critical_dates":[{"event":"","date":"","importance":""}],"financial_terms":[{"term":"","value":"","notes":""}],"risk_assessment":{"overall_risk":"High/Medium/Low","risk_factors":[],"favorable_clauses":[],"unfavorable_clauses":[]},"missing_clauses":[],"recommendations":[],"plain_english_explanation":"","action_required":[],"comparison_notes":"${text2 ? "comparison" : "N/A"}"}` }
+      ], 5500);
+      setResult({ type:"legal", ...data });
+      setActiveTab("legal_summary");
+      showToast("⚖️ Analysis complete!");
+    } catch (e) {
+      setStatus("❌ Error! Try again.");
+    }
+    setLoading(false); setStatus("");
+  };
+
+  // ── PDF GENERATORS ────────────────────────────────────────────────────────────
+  const pdfMeeting = () => {
+    const r = result;
+    downloadPDF(`
+      <h1>📋 ${r.meeting_title||mName||"Meeting Summary"}</h1>
+      <div class="meta"><span class="meta-item">📅 ${new Date().toLocaleDateString("en-IN")}</span><span class="meta-item">🗂️ ${mType||"General"}</span><span class="meta-item">👥 ${mAttendees||"Not specified"}</span><span class="meta-item">😊 ${r.sentiment}</span></div>
+      <div class="stat-row"><div class="stat"><div class="stat-num">${r.meeting_effectiveness||0}%</div><div class="stat-label">Effectiveness</div></div><div class="stat"><div class="stat-num">${r.action_items?.length||0}</div><div class="stat-label">Actions</div></div><div class="stat"><div class="stat-num">${r.decisions_made?.length||0}</div><div class="stat-label">Decisions</div></div><div class="stat"><div class="stat-num">${r.follow_ups?.length||0}</div><div class="stat-label">Follow-ups</div></div></div>
+      <div class="section"><h2>📝 Executive Summary</h2><div class="summary">${r.executive_summary}</div></div>
+      ${r.key_discussions?.length ? `<div class="section"><h2>💬 Key Discussions</h2><table><thead><tr><th>Topic</th><th>What Discussed</th><th>Outcome</th></tr></thead><tbody>${r.key_discussions.map(d=>`<tr><td><b>${d.topic}</b></td><td>${d.summary}</td><td>${d.outcome}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      ${r.action_items?.length ? `<div class="section"><h2>🎯 Action Items</h2><table><thead><tr><th>Task</th><th>Assigned To</th><th>Deadline</th><th>Priority</th></tr></thead><tbody>${r.action_items.map(a=>`<tr><td>${a.task}</td><td>${a.assigned_to}</td><td>${a.deadline}</td><td><span class="badge badge-${a.priority==="High"?"high":a.priority==="Medium"?"med":"low"}">${a.priority}</span></td></tr>`).join("")}</tbody></table></div>` : ""}
+      ${r.decisions_made?.length ? `<div class="section"><h2>✅ Decisions Made</h2><table><thead><tr><th>Decision</th><th>Decided By</th><th>Impact</th></tr></thead><tbody>${r.decisions_made.map(d=>`<tr><td>${d.decision}</td><td>${d.decided_by}</td><td>${d.impact}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      ${r.follow_ups?.length ? `<div class="section"><h2>🔄 Follow-ups</h2><table><thead><tr><th>Item</th><th>Responsible</th><th>Due Date</th></tr></thead><tbody>${r.follow_ups.map(f=>`<tr><td>${f.item}</td><td>${f.responsible}</td><td>${f.due_date}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      ${r.blockers?.length ? `<div class="section"><h2>🚧 Blockers</h2><ul>${r.blockers.map(b=>`<li>${b}</li>`).join("")}</ul></div>` : ""}
+      ${r.email_subject ? `<div class="section"><h2>📧 Follow-up Email</h2><h3>Subject: ${r.email_subject}</h3><p style="white-space:pre-wrap;margin-top:8px">${r.email_body}</p></div>` : ""}
+    `, `meeting-${Date.now()}.pdf`);
+    showToast("📄 Downloading PDF...");
+  };
+
+  const pdfEmail = () => {
+    const r = result;
+    downloadPDF(`
+      <h1>📧 ${eType} Email</h1>
+      <div class="meta"><span class="meta-item">From: ${eSender||"[Sender]"}</span><span class="meta-item">To: ${eRecip||"[Recipient]"}</span><span class="meta-item">Tone: ${eTone}</span><span class="meta-item">Score: ${r.email_score}/100</span></div>
+      <div class="section"><h2>Subject</h2><div class="summary">${r.subject}</div></div>
+      <div class="section"><h2>Email Body</h2><p style="white-space:pre-wrap;line-height:1.85">${r.email_body}</p></div>
+      <div class="section"><h2>Key Points</h2><ul>${(r.key_points||[]).map(p=>`<li>${p}</li>`).join("")}</ul></div>
+      <div class="section"><h2>Follow-up Timing</h2><p>${r.follow_up_timing}</p></div>
+      <div class="section"><h2>Tips to Improve</h2><ul>${(r.tips||[]).map(t=>`<li>${t}</li>`).join("")}</ul></div>
+    `, `email-${Date.now()}.pdf`);
+    showToast("📄 Downloading PDF...");
+  };
+
+  const pdfContract = () => {
+    const r = result;
+    downloadPDF(`
+      <h1>📝 ${r.contract_title||cType}</h1>
+      <div class="meta"><span class="meta-item">📅 ${r.effective_date}</span><span class="meta-item">⚖️ ${cJur||"India"}</span><span class="meta-item">💰 ${cVal||"As agreed"}</span></div>
+      <div class="section"><h2>1. PARTIES</h2><p><b>Party A:</b> ${r.parties?.party_a||cPartyA}</p><p style="margin-top:8px"><b>Party B:</b> ${r.parties?.party_b||cPartyB}</p></div>
+      <div class="section"><h2>2. RECITALS</h2><p>${r.recitals}</p></div>
+      <div class="section"><h2>3. SCOPE OF WORK</h2><p>${r.scope_of_work}</p></div>
+      <div class="section"><h2>4. PAYMENT TERMS</h2><p>${r.payment_terms}</p></div>
+      <div class="section"><h2>5. DURATION & TERMINATION</h2><p>${r.duration_and_termination}</p></div>
+      <div class="section"><h2>6. CONFIDENTIALITY</h2><p>${r.confidentiality}</p></div>
+      <div class="section"><h2>7. INTELLECTUAL PROPERTY</h2><p>${r.intellectual_property}</p></div>
+      <div class="section"><h2>8. LIABILITY & INDEMNITY</h2><p>${r.liability_and_indemnity}</p></div>
+      <div class="section"><h2>9. DISPUTE RESOLUTION</h2><p>${r.dispute_resolution}</p></div>
+      <div class="section"><h2>10. GENERAL PROVISIONS</h2><ul>${(r.general_clauses||[]).map(c=>`<li>${c}</li>`).join("")}</ul></div>
+      ${r.risk_flags?.length ? `<div class="section"><h2>⚠️ Risk Flags</h2><ul>${r.risk_flags.map(f=>`<li>${f}</li>`).join("")}</ul></div>` : ""}
+      <div class="section"><h2>SIGNATURES</h2><p style="white-space:pre-wrap">${r.signatures_block}</p></div>
+      <p style="font-size:11px;color:#94a3b8;margin-top:24px;font-style:italic">⚠️ AI-generated draft. Review with a qualified legal professional before signing.</p>
+    `, `contract-${Date.now()}.pdf`);
+    showToast("📄 Downloading PDF...");
+  };
+
+  const pdfLegal = () => {
+    const r = result;
+    const rc = r.risk_assessment?.overall_risk === "High" ? "#dc2626" : r.risk_assessment?.overall_risk === "Medium" ? "#B8791F" : "#0C8457";
+    downloadPDF(`
+      <h1>⚖️ Legal Document Analysis</h1>
+      <div class="meta"><span class="meta-item">📄 ${r.document_type}</span><span class="meta-item" style="color:${rc}">Risk: ${r.risk_assessment?.overall_risk}</span><span class="meta-item">${lAction}</span></div>
+      <div class="section"><h2>📝 Summary</h2><div class="summary">${r.summary}</div></div>
+      <div class="section"><h2>📖 Plain English Explanation</h2><p>${r.plain_english_explanation}</p></div>
+      ${r.key_clauses?.length ? `<div class="section"><h2>🔍 Key Clauses</h2><table><thead><tr><th>Clause</th><th>Plain English</th><th>Risk</th><th>Notes</th></tr></thead><tbody>${r.key_clauses.map(c=>`<tr><td><b>${c.clause_name}</b></td><td>${c.plain_english}</td><td><span class="badge badge-${c.risk_level==="High"?"high":c.risk_level==="Medium"?"med":"low"}">${c.risk_level}</span></td><td>${c.notes}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      ${r.risk_assessment ? `<div class="section"><h2>⚠️ Risk Assessment</h2><p><b>Overall Risk: <span style="color:${rc}">${r.risk_assessment.overall_risk}</span></b></p><h3 style="margin-top:12px">Risk Factors:</h3><ul>${(r.risk_assessment.risk_factors||[]).map(f=>`<li>${f}</li>`).join("")}</ul><h3 style="margin-top:12px">Unfavorable Clauses:</h3><ul>${(r.risk_assessment.unfavorable_clauses||[]).map(c=>`<li>${c}</li>`).join("")}</ul></div>` : ""}
+      ${r.missing_clauses?.length ? `<div class="section"><h2>❌ Missing Clauses</h2><ul>${r.missing_clauses.map(c=>`<li>${c}</li>`).join("")}</ul></div>` : ""}
+      ${r.recommendations?.length ? `<div class="section"><h2>💡 Recommendations</h2><ul>${r.recommendations.map(rec=>`<li>${rec}</li>`).join("")}</ul></div>` : ""}
+      <p style="font-size:11px;color:#94a3b8;margin-top:24px;font-style:italic">⚠️ AI-generated analysis for informational purposes only. Consult a qualified legal professional for legal advice.</p>
+    `, `legal-analysis-${Date.now()}.pdf`);
+    showToast("📄 Downloading PDF...");
+  };
+
+  // ── THEME TOKENS — single theme, same palette & language as Home.jsx ──────────
+  const T = {
+    bg:"#f6faf7", s1:"#eef8f2", s2:"#e4f3ea",
+    text:"#122420", muted:"#5c6b64", muted2:"rgba(18,54,42,.7)",
+    border:"rgba(18,54,42,.10)", b2:"rgba(18,54,42,.08)", b3:"rgba(18,54,42,.04)",
+    gold:"#0FA968", gold2:"#1596D6",
+    cardBg:"#eef8f2", cardBorder:"rgba(18,54,42,.10)",
+    inputBg:"#fffefb", inputBorder:"rgba(18,54,42,.12)",
+    navBg:"rgba(228,243,234,.88)",
+    ab1:"rgba(15,169,104,.16)", ab2:"rgba(21,150,214,.12)", ab3:"rgba(242,169,59,.10)",
+    grid:"rgba(15,169,104,.035)",
+    toastBg:"linear-gradient(135deg,#0FA968,#0C8457)",
+    keyBg:"rgba(15,169,104,.08)", keyBorder:"rgba(15,169,104,.22)", keyDot:"#0FA968",
+  };
+
+  // ── CSS STYLES ────────────────────────────────────────────────────────────────
+  const css = `
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;650;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:${T.bg};font-family:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;color:${T.text};min-height:100vh;scroll-behavior:smooth}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideR{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:translateX(0)}}
+@keyframes glow{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.wrap{min-height:100vh;position:relative;overflow-x:hidden;background:${T.bg}}
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.ab{position:absolute;border-radius:50%;filter:blur(130px)}
+.ab1{width:700px;height:700px;background:radial-gradient(circle,${T.ab1},transparent 70%);top:-250px;left:-180px;animation:glow 6s ease-in-out infinite}
+.ab2{width:550px;height:550px;background:radial-gradient(circle,${T.ab2},transparent 70%);bottom:-160px;right:-120px;animation:glow 8s ease-in-out infinite 2s}
+.ab3{width:380px;height:380px;background:radial-gradient(circle,${T.ab3},transparent 70%);top:45%;left:55%;transform:translate(-50%,-50%);animation:glow 10s ease-in-out infinite 4s}
+.grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(${T.grid} 1px,transparent 1px),linear-gradient(90deg,${T.grid} 1px,transparent 1px);background-size:64px 64px}
+.header{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:12px 30px;background:${T.navBg};backdrop-filter:blur(32px) saturate(1.4);border-bottom:1px solid ${T.border}}
+.logo-wrap{display:flex;align-items:center;gap:11px}
+.logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,${T.gold},${T.gold2});display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 8px 22px rgba(15,150,120,.28)}
+.logo-name{font-family:'Inter',sans-serif;font-size:16px;font-weight:700;color:${T.gold};letter-spacing:-.3px}
+.logo-badge{font-size:9px;font-weight:800;letter-spacing:2px;color:${T.gold};background:${T.keyBg};padding:3px 10px;border-radius:20px;border:1px solid ${T.keyBorder};text-transform:uppercase}
+.header-btns{display:flex;gap:8px;align-items:center}
+.main{max-width:980px;margin:0 auto;padding:44px 20px 100px;position:relative;z-index:1}
+.hero{text-align:center;padding:20px 0 50px;animation:fadeUp .7s ease}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:${T.keyBg};border:1px solid ${T.keyBorder};padding:6px 18px;border-radius:100px;margin-bottom:28px}
+.hero-eyebrow-dot{width:6px;height:6px;background:${T.gold};border-radius:50%;animation:glow 2s ease-in-out infinite}
+.hero-eyebrow-text{font-size:11px;font-weight:700;letter-spacing:1.6px;color:${T.gold};text-transform:uppercase}
+.hero-title{font-family:'Inter',sans-serif;font-size:clamp(38px,5vw,64px);font-weight:750;line-height:1.08;letter-spacing:-1.5px;margin-bottom:18px}
+.hero-title-line1{display:block;color:${T.text}}
+.hero-title-line2{display:block;background:linear-gradient(135deg,${T.gold} 0%,${T.gold2} 50%,${T.gold} 100%);background-size:300% 300%;animation:gradShift 4s ease infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:15px;color:${T.muted2};max-width:520px;margin:0 auto 14px;line-height:1.7;font-weight:400}
+.hero-sub-note{font-size:12px;color:${T.muted};display:flex;align-items:center;justify-content:center;gap:6px}
+.hero-sub-note span{background:rgba(15,169,104,.1);border:1px solid rgba(15,169,104,.2);color:#0C8457;padding:3px 12px;border-radius:100px;font-weight:700;font-size:11px}
+.tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:12px}
+@media(max-width:640px){.tool-grid{grid-template-columns:1fr}}
+.tool-card{position:relative;background:${T.cardBg};border:1px solid ${T.cardBorder};border-radius:22px;padding:30px 26px;cursor:pointer;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;overflow:hidden;text-align:left}
+.tool-card::before{content:'';position:absolute;inset:0;border-radius:22px;opacity:0;transition:opacity .3s;background:linear-gradient(135deg,${T.keyBg} 0%,transparent 60%)}
+.tool-card:hover{transform:translateY(-4px);border-color:${T.gold};box-shadow:0 20px 50px rgba(15,90,70,.14),0 0 0 1px ${T.keyBorder}}
+.tool-card:hover::before{opacity:1}
+.tc-corner{position:absolute;top:0;right:0;width:80px;height:80px;border-radius:0 22px 0 80px;opacity:.06;transition:opacity .3s}
+.tool-card:hover .tc-corner{opacity:.12}
+.tc-icon-wrap{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:18px;border:1px solid ${T.b2};background:${T.inputBg}}
+.tc-name{font-family:'Inter',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:-.4px}
+.tc-desc{font-size:13px;color:${T.muted2};line-height:1.65;margin-bottom:18px}
+.tc-tags{display:flex;flex-wrap:wrap;gap:7px}
+.tc-tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid ${T.b2};color:${T.muted};transition:all .2s}
+.tool-card:hover .tc-tag{border-color:${T.keyBorder};color:${T.muted2}}
+.tc-arrow{position:absolute;bottom:26px;right:26px;width:32px;height:32px;border-radius:9px;background:${T.keyBg};border:1px solid ${T.keyBorder};display:flex;align-items:center;justify-content:center;font-size:14px;opacity:0;transform:translateX(-6px);transition:all .25s}
+.tool-card:hover .tc-arrow{opacity:1;transform:translateX(0)}
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:26px;animation:slideR .35s ease}
+.bc-btn{background:none;border:none;color:${T.muted2};cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;transition:all .2s;font-weight:500}
+.bc-btn:hover{color:${T.gold};background:${T.keyBg}}
+.bc-sep{color:${T.muted};font-size:12px;opacity:.5}
+.bc-curr{font-size:13px;font-weight:700;color:${T.gold}}
+.card{background:${T.cardBg};border:1px solid ${T.cardBorder};border-radius:22px;padding:32px;margin-bottom:18px;animation:fadeUp .4s ease}
+.card-title{font-family:'Inter',sans-serif;font-size:22px;font-weight:750;margin-bottom:7px;letter-spacing:-.4px;color:${T.text}}
+.card-sub{font-size:13px;color:${T.muted2};line-height:1.6;margin-bottom:26px}
+.label{display:block;font-size:10px;font-weight:700;color:${T.muted2};letter-spacing:1px;text-transform:uppercase;margin:20px 0 8px}
+.input,.textarea{width:100%;background:${T.inputBg};border:1px solid ${T.inputBorder};border-radius:11px;padding:13px 16px;color:${T.text};font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:all .22s}
+.input:focus,.textarea:focus{border-color:${T.gold};background:${T.keyBg};box-shadow:0 0 0 3px ${T.keyBg}}
+.input::placeholder,.textarea::placeholder{color:${T.muted}}
+.textarea{resize:vertical;min-height:180px;line-height:1.8}
+.wc{font-size:11px;color:${T.muted};margin-top:7px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.opt{padding:8px 16px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;transition:all .2s;border:1px solid ${T.b2};background:${T.inputBg};color:${T.muted2}}
+.opt:hover{border-color:${T.gold};color:${T.gold}}
+.opt.sel{background:linear-gradient(135deg,${T.gold},${T.gold2});border-color:transparent;color:#fff;font-weight:800}
+.opt.sel-blue{background:linear-gradient(135deg,#1596D6,#0E77AC);border-color:transparent;color:#fff;font-weight:700}
+.opt.sel-green{background:linear-gradient(135deg,#0FA968,#0C8457);border-color:transparent;color:#fff;font-weight:700}
+.upload-zone{position:relative;border:2px dashed ${T.b2};border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .25s;background:${T.inputBg};margin-top:8px}
+.upload-zone:hover,.upload-zone.drag{border-color:${T.gold};background:${T.keyBg}}
+.upload-icon{font-size:30px;margin-bottom:10px;display:block}
+.upload-title{font-size:14px;font-weight:700;color:${T.text};margin-bottom:4px}
+.upload-sub{font-size:12px;color:${T.muted}}
+.upload-btn-fake{display:inline-block;background:${T.keyBg};border:1px solid ${T.keyBorder};color:${T.gold};padding:7px 20px;border-radius:9px;font-size:12px;font-weight:700;margin-top:6px}
+.file-attached{display:flex;align-items:center;gap:10px;margin-top:10px;background:rgba(15,169,104,.08);border:1px solid rgba(15,169,104,.2);border-radius:10px;padding:10px 14px;animation:fadeIn .3s}
+.file-attached-name{font-size:13px;font-weight:600;color:#0C8457}
+.file-remove{background:none;border:none;color:${T.muted};cursor:pointer;font-size:16px;padding:2px 6px;transition:color .2s}
+.file-remove:hover{color:#DC2626}
+.or-divider{display:flex;align-items:center;gap:12px;margin:18px 0 4px}
+.or-line{flex:1;height:1px;background:${T.b2}}
+.or-text{font-size:11px;font-weight:700;color:${T.muted};letter-spacing:.5px;text-transform:uppercase}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:640px){.two-col,.three-col{grid-template-columns:1fr}}
+.btn-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.btn{padding:13px 22px;border-radius:11px;cursor:pointer;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;transition:all .25s;border:none;display:flex;align-items:center;gap:8px;justify-content:center;white-space:nowrap}
+.btn-gold{background:linear-gradient(135deg,${T.gold},${T.gold2});color:#fff;flex:1;font-weight:800;box-shadow:0 4px 20px ${T.ab1}}
+.btn-gold:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 30px ${T.ab1}}
+.btn-gold:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+.btn-ghost{background:${T.inputBg};border:1px solid ${T.b2}!important;color:${T.text}}
+.btn-ghost:hover{background:${T.keyBg}}
+.btn-blue{background:linear-gradient(135deg,#1596D6,#0E77AC);color:#fff}
+.btn-green{background:linear-gradient(135deg,#0FA968,#0C8457);color:#fff}
+.btn-pdf{background:linear-gradient(135deg,#DC2626,#B91C1C);color:#fff}
+.btn-sm{padding:9px 16px!important;font-size:12px!important;border-radius:9px!important}
+.spinner{width:17px;height:17px;border:2.5px solid ${T.keyBg};border-top-color:${T.gold};border-radius:50%;animation:spin .85s linear infinite;flex-shrink:0}
+.load-box{display:flex;align-items:center;gap:14px;background:${T.keyBg};border:1px solid ${T.keyBorder};border-radius:13px;padding:16px 18px;margin-top:16px;animation:fadeIn .3s}
+.load-text{font-size:14px;font-weight:700;color:${T.gold}}
+.load-sub{font-size:11px;color:${T.muted};margin-top:3px}
+.section{background:${T.cardBg};border:1px solid ${T.cardBorder};border-radius:18px;padding:24px;margin-bottom:14px;animation:fadeUp .4s ease}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sec-title{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:-.2px;color:${T.text}}
+.sec-count{font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;background:${T.keyBg};color:${T.gold};letter-spacing:.3px}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:18px;padding-bottom:4px;scrollbar-width:none}
+.tab{padding:10px 18px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .2s;border:none;outline:none}
+.tab.act{background:linear-gradient(135deg,${T.gold},${T.gold2});color:#fff}
+.tab.inact{background:${T.inputBg};color:${T.muted2};border:1px solid ${T.b2}}
+.tab.inact:hover{border-color:${T.gold};color:${T.gold}}
+.tbl{overflow-x:auto;border-radius:11px;border:1px solid ${T.b2}}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:${T.keyBg};padding:10px 14px;text-align:left;color:${T.gold};font-weight:700;font-size:10px;letter-spacing:.6px}
+td{padding:10px 14px;color:${T.muted2};border-bottom:1px solid ${T.b2};vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:${T.inputBg}}
+.pill{display:inline-flex;align-items:center;gap:5px;background:${T.keyBg};border:1px solid ${T.keyBorder};color:${T.gold};padding:4px 13px;border-radius:100px;font-size:11px;font-weight:700}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:10px;font-weight:700}
+.bh{background:rgba(220,38,38,.12);color:#DC2626}
+.bm{background:rgba(242,169,59,.16);color:#9A6415}
+.bl{background:rgba(15,169,104,.12);color:#0C8457}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.stat-box{flex:1;min-width:86px;background:${T.cardBg};border:1px solid ${T.cardBorder};border-radius:14px;padding:16px;text-align:center}
+.stat-num{font-family:'Inter',sans-serif;font-size:26px;font-weight:800;line-height:1.1}
+.stat-label{font-size:10px;color:${T.muted};font-weight:600;letter-spacing:.4px;margin-top:4px;text-transform:uppercase}
+.sum-box{border-radius:11px;padding:14px 16px;font-size:13px;color:${T.muted2};line-height:1.75;border:1px solid;margin-bottom:10px}
+.txt-pre{background:${T.inputBg};border:1px solid ${T.b2};border-radius:11px;padding:18px;font-size:13px;color:${T.muted2};line-height:1.85;white-space:pre-wrap;font-family:'Inter',sans-serif}
+.sub-label{font-size:10px;font-weight:800;color:${T.gold};letter-spacing:.6px;text-transform:uppercase;margin:16px 0 8px}
+.sub-item{font-size:13px;color:${T.muted2};padding:4px 0;line-height:1.55}
+.divider{height:1px;background:${T.b2};margin:16px 0}
+.quote{border-left:3px solid #1596D6;padding:10px 16px;background:rgba(21,150,214,.07);border-radius:0 9px 9px 0;font-size:13px;color:${T.muted2};font-style:italic;line-height:1.7;margin:8px 0}
+.action-bar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.clause-card{background:${T.inputBg};border:1px solid ${T.b2};border-radius:14px;padding:18px;margin-bottom:12px}
+.toast{position:fixed;bottom:26px;right:26px;z-index:9999;background:${T.toastBg};color:#fff;padding:13px 22px;border-radius:12px;font-weight:700;font-size:13px;animation:fadeUp .3s ease;box-shadow:0 8px 28px rgba(15,169,104,.35)}
+@media(max-width:500px){.header{padding:10px 16px}.main{padding:28px 14px 80px}}
+`;
+
+  // ── HEADER COMPONENT ──────────────────────────────────────────────────────────
+  const Header = () => (
+    <header className="header">
+      <div className="logo-wrap">
+        <div className="logo-icon">⚡</div>
+        <span className="logo-name">MK-AI Tool Suite</span>
+        <span className="logo-badge">PRO</span>
+      </div>
+      <div className="header-btns">
+        {activeTool && (
+          <button className="btn btn-ghost btn-sm" onClick={goHome} style={{gap:6}}>
+            <span>⚡</span> All Tools
+          </button>
+        )}
+        <button className="btn btn-ghost btn-sm" onClick={() => navigate("/")}>🏠 Home</button>
+      </div>
+    </header>
+  );
+
+  // ── TOOL SELECTOR SCREEN ──────────────────────────────────────────────────────
+  if (!activeTool) return (
+    <>
+
+      <Helmet>
+        <title>Work Flow — AI Automation for Emails & Meetings | MK AI</title>
+        <meta name="description" content="Automate emails, legal documents, and meeting summaries with MK AI's Work Flow tools." />
+      </Helmet>
+      <style>{css}</style>
+      <div className="wrap">
+        <div className="ambient"><div className="ab ab1"/><div className="ab ab2"/><div className="ab ab3"/></div>
+        <div className="grid"/>
+        <Header/>
+        <main className="main">
+          <div className="hero">
+            <div className="hero-eyebrow">
+              <div className="hero-eyebrow-dot"/>
+              <span className="hero-eyebrow-text">AI-Powered Document Suite</span>
+            </div>
+            <h1 className="hero-title">
+              <span className="hero-title-line1">What do you</span>
+              <span className="hero-title-line2">want to do?</span>
+            </h1>
+            <p className="hero-sub">Select a tool below — AI handles everything from meetings to legal docs. Every output includes a PDF download.</p>
+            <p className="hero-sub-note"><span>✓ PDF Export</span> available in all tools</p>
+          </div>
+          <div className="tool-grid">
+            {TOOLS.map(t => (
+              <div key={t.id} className="tool-card" onClick={() => goTool(t.id)}>
+                <div className="tc-corner" style={{background:t.color}}/>
+                <div className="tc-icon-wrap" style={{borderColor:`${t.color}22`, background:t.bg}}>
+                  <span style={{fontSize:26}}>{t.icon}</span>
+                </div>
+                <div className="tc-name" style={{color:t.color}}>{t.name}</div>
+                <div className="tc-desc">{t.desc}</div>
+                <div className="tc-tags">{t.tags.map(tg => <span key={tg} className="tc-tag">{tg}</span>)}</div>
+                <div className="tc-arrow" style={{background:`${t.color}18`, borderColor:`${t.color}30`, color:t.color}}>→</div>
+              </div>
+            ))}
+          </div>
+        </main>
+      </div>
+    </>
+  );
+
+  const ct = TOOLS.find(t => t.id === activeTool);
+
+  return (
+    <>
+      <style>{css}</style>
+      <div className="wrap">
+        <div className="ambient"><div className="ab ab1"/><div className="ab ab2"/><div className="ab ab3"/></div>
+        <div className="grid"/>
+        <Header/>
+        <main className="main">
+          <div className="breadcrumb">
+            <button className="bc-btn" onClick={goHome}>← Tool Suite</button>
+            <span className="bc-sep">›</span>
+            <span className="bc-curr">{ct.icon} {ct.name}</span>
+          </div>
+
+          {/* ── MEETING FORM ─────────────────────────────────────────────────── */}
+          {activeTool === "meeting" && !result && (
+            <div className="card">
+              <div className="card-title">📋 Meeting Summarizer</div>
+              <div className="card-sub">Upload a transcript file or paste your notes — AI extracts everything and writes the follow-up email</div>
+              <div className="two-col">
+                <div><label className="label">Meeting Name</label><input className="input" placeholder="Q3 Product Review..." value={mName} onChange={e => setMName(e.target.value)}/></div>
+                <div><label className="label">Attendees (comma separated)</label><input className="input" placeholder="Rahul, Priya, Client..." value={mAttendees} onChange={e => setMAttendees(e.target.value)}/></div>
+              </div>
+              <label className="label">Meeting Type</label>
+              <div className="opts">{MEETING_TYPES.map(t => <button key={t} className={`opt ${mType === t ? "sel" : ""}`} onClick={() => setMType(t)}>{t}</button>)}</div>
+              <label className="label">Summary Language</label>
+              <div className="opts">{LANGUAGES.map(l => <button key={l} className={`opt ${mLang === l ? "sel-blue" : ""}`} onClick={() => setMLang(l)}>{l}</button>)}</div>
+              <label className="label">Upload Transcript / Notes File</label>
+              <UploadZone file={mFile?.file||null} onFile={d => setMFile(d)} onRemove={() => setMFile(null)}/>
+              {!mFile && <>
+                <div className="or-divider"><div className="or-line"/><span className="or-text">OR paste manually</span><div className="or-line"/></div>
+                <label className="label">Meeting Notes / Transcript</label>
+                <textarea className="textarea" style={{minHeight:240}} placeholder="Paste your meeting notes or transcript here..." value={mText} onChange={e => setMText(e.target.value)}/>
+                <div className="wc">Words: {mText.trim() ? mText.trim().split(/\s+/).length : 0} | Chars: {mText.length}</div>
+              </>}
+              {loading && <div className="load-box"><div className="spinner"/><div><div className="load-text">{status}</div><div className="load-sub">This may take 15–25 seconds</div></div></div>}
+              <div className="btn-row">
+                <button className="btn btn-ghost" onClick={goHome}>← Back</button>
+                <button className="btn btn-gold" disabled={loading || (!mText.trim() && !mFile)} onClick={genMeeting}>
+                  {loading ? <><div className="spinner"/>Analyzing...</> : "🚀 Summarize Meeting"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── EMAIL FORM ───────────────────────────────────────────────────── */}
+          {activeTool === "email" && !result && (
+            <div className="card">
+              <div className="card-title">📧 Professional Email Writer</div>
+              <div className="card-sub">Upload a brief/context file or describe what you need — AI writes the perfect email</div>
+              <label className="label">Email Type *</label>
+              <div className="opts">{EMAIL_TYPES.map(t => <button key={t} className={`opt ${eType === t ? "sel" : ""}`} onClick={() => setEType(t)}>{t}</button>)}</div>
+              <div className="two-col">
+                <div><label className="label">Your Name / Company</label><input className="input" placeholder="John Doe / MK-AI..." value={eSender} onChange={e => setESender(e.target.value)}/></div>
+                <div><label className="label">Recipient Name / Company</label><input className="input" placeholder="Jane Smith / ABC Corp..." value={eRecip} onChange={e => setERecip(e.target.value)}/></div>
+              </div>
+              <label className="label">Tone</label>
+              <div className="opts">{TONES.map(t => <button key={t} className={`opt ${eTone === t ? "sel-blue" : ""}`} onClick={() => setETone(t)}>{t}</button>)}</div>
+              <label className="label">Language</label>
+              <div className="opts">{LANGUAGES.map(l => <button key={l} className={`opt ${eLang === l ? "sel" : ""}`} onClick={() => setELang(l)}>{l}</button>)}</div>
+              <label className="label">Upload Context File (Optional)</label>
+              <UploadZone file={eFile?.file||null} onFile={d => setEFile(d)} onRemove={() => setEFile(null)} label="Upload Context / Brief Document"/>
+              {!eFile && <>
+                <div className="or-divider"><div className="or-line"/><span className="or-text">OR type context</span><div className="or-line"/></div>
+                <label className="label">Context — what to write about *</label>
+                <textarea className="textarea" placeholder="Describe what this email should cover, the goal, any specific details..." value={eCtx} onChange={e => setECtx(e.target.value)}/>
+              </>}
+              {loading && <div className="load-box"><div className="spinner"/><div><div className="load-text">{status}</div><div className="load-sub">Crafting the perfect email...</div></div></div>}
+              <div className="btn-row">
+                <button className="btn btn-ghost" onClick={goHome}>← Back</button>
+                <button className="btn btn-gold" disabled={loading || (!eCtx.trim() && !eFile) || !eType} onClick={genEmail}>
+                  {loading ? <><div className="spinner"/>Writing...</> : "✍️ Write Email"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── CONTRACT FORM ─────────────────────────────────────────────────── */}
+          {activeTool === "contract" && !result && (
+            <div className="card">
+              <div className="card-title">📝 Contract Generator</div>
+              <div className="card-sub">Fill in the details or upload a reference doc — AI drafts a complete, legally-structured contract</div>
+              <label className="label">Contract Type *</label>
+              <div className="opts">{CONTRACT_TYPES.map(t => <button key={t} className={`opt ${cType === t ? "sel" : ""}`} onClick={() => setCType(t)}>{t}</button>)}</div>
+              <div className="two-col">
+                <div><label className="label">Party A (Client / Employer) *</label><input className="input" placeholder="Full name or company..." value={cPartyA} onChange={e => setCPartyA(e.target.value)}/></div>
+                <div><label className="label">Party B (Vendor / Employee) *</label><input className="input" placeholder="Full name or company..." value={cPartyB} onChange={e => setCPartyB(e.target.value)}/></div>
+              </div>
+              <div className="two-col">
+                <div><label className="label">Duration</label><input className="input" placeholder="6 months, 1 year, ongoing..." value={cDur} onChange={e => setCDur(e.target.value)}/></div>
+                <div><label className="label">Value / Compensation</label><input className="input" placeholder="₹50,000/month, $5,000 fixed..." value={cVal} onChange={e => setCVal(e.target.value)}/></div>
+              </div>
+              <div className="two-col">
+                <div><label className="label">Jurisdiction / Governing Law</label><input className="input" placeholder="Delhi, India / New York..." value={cJur} onChange={e => setCJur(e.target.value)}/></div>
+              </div>
+              <label className="label">Upload Reference / Scope Document (Optional)</label>
+              <UploadZone file={cFile?.file||null} onFile={d => setCFile(d)} onRemove={() => setCFile(null)} label="Upload Scope / Reference Document"/>
+              {!cFile && <>
+                <div className="or-divider"><div className="or-line"/><span className="or-text">OR describe scope</span><div className="or-line"/></div>
+                <label className="label">Scope / Purpose *</label>
+                <textarea className="textarea" placeholder="Describe the services, deliverables, special terms..." value={cScope} onChange={e => setCScope(e.target.value)}/>
+              </>}
+              {loading && <div className="load-box"><div className="spinner"/><div><div className="load-text">{status}</div><div className="load-sub">This may take 20–30 seconds</div></div></div>}
+              <div className="btn-row">
+                <button className="btn btn-ghost" onClick={goHome}>← Back</button>
+                <button className="btn btn-gold" disabled={loading || !cType || !cPartyA || !cPartyB || (!cScope.trim() && !cFile)} onClick={genContract}>
+                  {loading ? <><div className="spinner"/>Drafting...</> : "📝 Generate Contract"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── LEGAL FORM ───────────────────────────────────────────────────── */}
+          {activeTool === "legal" && !result && (
+            <div className="card">
+              <div className="card-title">⚖️ Legal Document Helper</div>
+              <div className="card-sub">Upload or paste any legal document — AI analyzes clauses, risks, and explains everything in plain English</div>
+              <label className="label">What do you want to do? *</label>
+              <div className="opts">{LEGAL_ACTIONS.map(a => <button key={a} className={`opt ${lAction === a ? "sel" : ""}`} onClick={() => setLAction(a)}>{a}</button>)}</div>
+              <label className="label">Upload Document 1 *</label>
+              <UploadZone file={lFile?.file||null} onFile={d => setLFile(d)} onRemove={() => setLFile(null)} label="Upload Legal Document / Contract"/>
+              {!lFile && <>
+                <div className="or-divider"><div className="or-line"/><span className="or-text">OR paste text</span><div className="or-line"/></div>
+                <label className="label">Document 1 — Paste Legal Text *</label>
+                <textarea className="textarea" style={{minHeight:220}} placeholder="Paste your legal document, contract, clause here..." value={lText} onChange={e => setLText(e.target.value)}/>
+              </>}
+              {lAction === "Compare Two Versions" && <>
+                <label className="label" style={{marginTop:24}}>Upload Document 2 (For Comparison)</label>
+                <UploadZone file={lFile2?.file||null} onFile={d => setLFile2(d)} onRemove={() => setLFile2(null)} label="Upload Second Document Version"/>
+                {!lFile2 && <>
+                  <div className="or-divider"><div className="or-line"/><span className="or-text">OR paste text</span><div className="or-line"/></div>
+                  <label className="label">Document 2</label>
+                  <textarea className="textarea" style={{minHeight:160}} placeholder="Paste second document version here..." value={lText2} onChange={e => setLText2(e.target.value)}/>
+                </>}
+              </>}
+              {loading && <div className="load-box"><div className="spinner"/><div><div className="load-text">{status}</div><div className="load-sub">Reading and analyzing your document...</div></div></div>}
+              <div className="btn-row">
+                <button className="btn btn-ghost" onClick={goHome}>← Back</button>
+                <button className="btn btn-gold" disabled={loading || (!lText.trim() && !lFile) || !lAction} onClick={genLegal}>
+                  {loading ? <><div className="spinner"/>Analyzing...</> : "⚖️ Analyze Document"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ══════════════════════ RESULTS ══════════════════════════════════════ */}
+
+          {/* ── MEETING RESULT ───────────────────────────────────────────────── */}
+          {result?.type === "meeting" && (
+            <div style={{animation:"fadeUp .5s ease"}}>
+              <div className="stats-row">
+                {[
+                  { n:`${result.meeting_effectiveness||0}%`, l:"Effectiveness", c:scoreColor(result.meeting_effectiveness||0) },
+                  { n:result.action_items?.length||0, l:"Action Items", c:T.gold },
+                  { n:result.decisions_made?.length||0, l:"Decisions", c:"#0FA968" },
+                  { n:result.follow_ups?.length||0, l:"Follow-ups", c:"#1596D6" },
+                ].map((s,i) => <div key={i} className="stat-box"><div className="stat-num" style={{color:s.c}}>{s.n}</div><div className="stat-label">{s.l}</div></div>)}
+                <div className="stat-box">
+                  <div className="stat-num" style={{color:result.sentiment==="Positive"?"#0FA968":result.sentiment==="Negative"?"#DC2626":"#F2A93B",fontSize:13}}>
+                    {result.sentiment==="Positive"?"😊":result.sentiment==="Negative"?"😟":"😐"} {result.sentiment}
+                  </div>
+                  <div className="stat-label">Sentiment</div>
+                </div>
+              </div>
+              <div className="action-bar">
+                <button className="btn btn-ghost btn-sm" onClick={() => { setResult(null); setMText(""); setMFile(null); }}>← New</button>
+                <button className="btn btn-pdf btn-sm" onClick={pdfMeeting}>📄 PDF</button>
+                <button className="btn btn-blue btn-sm" onClick={() => { navigator.clipboard.writeText(`Subject: ${result.email_subject}\n\n${result.email_body}`); showToast("📧 Email copied!"); }}>📧 Copy Email</button>
+                <button className="btn btn-ghost btn-sm" onClick={() => { navigator.clipboard.writeText(JSON.stringify(result,null,2)); showToast("📋 JSON copied!"); }}>📋 JSON</button>
+              </div>
+              <div className="tabs">
+                {[{id:"summary",l:"📋 Summary"},{id:"actions",l:"🎯 Actions"},{id:"decisions",l:"✅ Decisions"},{id:"followups",l:"🔄 Follow-ups"},{id:"email",l:"📧 Email"}].map(t => (
+                  <button key={t.id} className={`tab ${activeTab===t.id?"act":"inact"}`} onClick={() => setActiveTab(t.id)}>{t.l}</button>
+                ))}
+              </div>
+              {activeTab === "summary" && <>
+                <div className="section">
+                  <div className="sec-title">📋 {result.meeting_title||mName||"Meeting Summary"}</div>
+                  <div style={{display:"flex",gap:8,margin:"10px 0 14px",flexWrap:"wrap"}}>
+                    {[mType||"General", mAttendees||"Not specified", mLang].map((v,i) => <span key={i} className="pill">{v}</span>)}
+                  </div>
+                  <div className="sum-box" style={{background:T.keyBg, borderColor:T.keyBorder}}>
+                    <b style={{color:T.gold}}>📝 Summary: </b>{result.executive_summary}
+                  </div>
+                </div>
+                {result.key_discussions?.length > 0 && (
+                  <div className="section">
+                    <div className="sec-head"><div className="sec-title">💬 Key Discussions</div><span className="sec-count">{result.key_discussions.length}</span></div>
+                    <div className="tbl"><table><thead><tr>{["Topic","What Discussed","Outcome"].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>
+                      {result.key_discussions.map((d,i) => <tr key={i}><td style={{fontWeight:700,color:T.gold}}>{d.topic}</td><td>{d.summary}</td><td style={{color:"#0FA968"}}>{d.outcome}</td></tr>)}
+                    </tbody></table></div>
+                  </div>
+                )}
+                {result.blockers?.length > 0 && (
+                  <div className="section">
+                    <div className="sec-title">🚧 Blockers</div>
+                    {result.blockers.map((b,i) => <div key={i} className="sum-box" style={{background:"rgba(220,38,38,.07)",borderColor:"rgba(220,38,38,.2)"}}>⛔ {b}</div>)}
+                  </div>
+                )}
+                {(result.risks_identified?.length > 0 || result.opportunities?.length > 0) && (
+                  <div className="section">
+                    <div className="two-col">
+                      {result.risks_identified?.length > 0 && <div><div className="sub-label" style={{color:"#DC2626"}}>⚠️ Risks</div>{result.risks_identified.map((r,i) => <div key={i} className="sub-item">• {r}</div>)}</div>}
+                      {result.opportunities?.length > 0 && <div><div className="sub-label" style={{color:"#0FA968"}}>🌟 Opportunities</div>{result.opportunities.map((o,i) => <div key={i} className="sub-item">• {o}</div>)}</div>}
+                    </div>
+                  </div>
+                )}
+                {result.next_meeting && (
+                  <div className="section">
+                    <div className="sec-title">📅 Next Meeting</div>
+                    {result.next_meeting.suggested_date && <div className="sum-box" style={{background:"rgba(21,150,214,.07)",borderColor:"rgba(21,150,214,.2)"}}><b style={{color:"#1596D6"}}>📅 </b>{result.next_meeting.suggested_date}</div>}
+                    {result.next_meeting.agenda?.length > 0 && <><div className="sub-label">Agenda</div>{result.next_meeting.agenda.map((a,i) => <div key={i} className="sub-item">📌 {a}</div>)}</>}
+                  </div>
+                )}
+              </>}
+              {activeTab === "actions" && (
+                <div className="section">
+                  <div className="sec-head"><div className="sec-title">🎯 Action Items</div><span className="sec-count">{result.action_items?.length||0}</span></div>
+                  <div className="tbl"><table><thead><tr>{["Task","Assigned To","Deadline","Priority"].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>
+                    {(result.action_items||[]).map((a,i) => <tr key={i}><td style={{fontWeight:600,color:T.text}}>{a.task}</td><td style={{color:T.gold}}>{a.assigned_to}</td><td>{a.deadline}</td><td><span className={`badge ${a.priority==="High"?"bh":a.priority==="Medium"?"bm":"bl"}`}>{a.priority}</span></td></tr>)}
+                  </tbody></table></div>
+                </div>
+              )}
+              {activeTab === "decisions" && (
+                <div className="section">
+                  <div className="sec-head"><div className="sec-title">✅ Decisions</div><span className="sec-count">{result.decisions_made?.length||0}</span></div>
+                  <div className="tbl"><table><thead><tr>{["Decision","Decided By","Impact"].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>
+                    {(result.decisions_made||[]).map((d,i) => <tr key={i}><td style={{fontWeight:600,color:T.text}}>{d.decision}</td><td style={{color:T.gold}}>{d.decided_by}</td><td style={{color:"#0FA968"}}>{d.impact}</td></tr>)}
+                  </tbody></table></div>
+                </div>
+              )}
+              {activeTab === "followups" && (
+                <div className="section">
+                  <div className="sec-head"><div className="sec-title">🔄 Follow-ups</div><span className="sec-count">{result.follow_ups?.length||0}</span></div>
+                  <div className="tbl"><table><thead><tr>{["Item","Responsible","Due Date"].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>
+                    {(result.follow_ups||[]).map((f,i) => <tr key={i}><td style={{fontWeight:600}}>{f.item}</td><td style={{color:T.gold}}>{f.responsible}</td><td style={{color:"#F2A93B"}}>{f.due_date}</td></tr>)}
+                  </tbody></table></div>
+                  {result.key_quotes?.length > 0 && <>
+                    <div className="sub-label" style={{marginTop:16}}>💬 Key Quotes</div>
+                    {result.key_quotes.map((q,i) => <div key={i} className="quote">"{q}"</div>)}
+                  </>}
+                </div>
+              )}
+              {activeTab === "email" && (
+                <div className="section">
+                  <div className="sec-title">📧 Follow-up Email</div>
+                  <div className="sub-label">Subject</div>
+                  <div style={{background:T.keyBg,border:`1px solid ${T.keyBorder}`,borderRadius:11,padding:"12px 16px",color:T.gold,fontWeight:700,marginBottom:14}}>{result.email_subject}</div>
+                  <div className="sub-label">Body</div>
+                  <div className="txt-pre">{result.email_body}</div>
+                  <div className="btn-row" style={{marginTop:14}}>
+                    <button className="btn btn-blue btn-sm" onClick={() => { navigator.clipboard.writeText(`Subject: ${result.email_subject}\n\n${result.email_body}`); showToast("📧 Email copied!"); }}>📧 Copy Email</button>
+                    <button className="btn btn-pdf btn-sm" onClick={pdfMeeting}>📄 PDF</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── EMAIL RESULT ──────────────────────────────────────────────────── */}
+          {result?.type === "email" && (
+            <div style={{animation:"fadeUp .5s ease"}}>
+              <div className="stats-row">
+                <div className="stat-box"><div className="stat-num" style={{color:scoreColor(result.email_score||0)}}>{result.email_score||0}<span style={{fontSize:14}}>/100</span></div><div className="stat-label">Email Score</div></div>
+                <div className="stat-box"><div className="stat-num" style={{color:"#1596D6",fontSize:13}}>{result.subject_line_strength}</div><div className="stat-label">Subject Strength</div></div>
+                <div className="stat-box"><div className="stat-num" style={{color:"#F2A93B",fontSize:11,lineHeight:1.3}}>{result.tone_used}</div><div className="stat-label">Tone Used</div></div>
+              </div>
+              <div className="action-bar">
+                <button className="btn btn-ghost btn-sm" onClick={() => { setResult(null); setECtx(""); setEFile(null); }}>← New Email</button>
+                <button className="btn btn-pdf btn-sm" onClick={pdfEmail}>📄 PDF</button>
+                <button className="btn btn-blue btn-sm" onClick={() => { navigator.clipboard.writeText(`Subject: ${result.subject}\n\n${result.email_body}`); showToast("📧 Copied!"); }}>📧 Copy Full Email</button>
+              </div>
+              <div className="tabs">
+                {[{id:"email_main",l:"📧 Email"},{id:"email_meta",l:"📊 Analysis"},{id:"email_alts",l:"🔀 Alternatives"}].map(t => (
+                  <button key={t.id} className={`tab ${activeTab===t.id?"act":"inact"}`} onClick={() => setActiveTab(t.id)}>{t.l}</button>
+                ))}
+              </div>
+              {activeTab === "email_main" && (
+                <div className="section">
+                  <div className="sec-title">📧 {eType} — {eSender||"You"} → {eRecip||"Recipient"}</div>
+                  <div className="sub-label">Subject Line</div>
+                  <div style={{background:T.keyBg,border:`1px solid ${T.keyBorder}`,borderRadius:11,padding:"12px 16px",color:T.gold,fontWeight:700,marginBottom:14}}>{result.subject}</div>
+                  <div className="sub-label">Email Body</div>
+                  <div className="txt-pre">{result.email_body}</div>
+                </div>
+              )}
+              {activeTab === "email_meta" && (
+                <div className="section">
+                  <div className="sec-title">📊 Analysis & Tips</div>
+                  {result.key_points?.length > 0 && <><div className="sub-label">Key Points Covered</div>{result.key_points.map((p,i) => <div key={i} className="sub-item">✅ {p}</div>)}</>}
+                  <div className="divider"/>
+                  {result.follow_up_timing && <><div className="sub-label">Follow-up Timing</div><div className="sum-box" style={{background:"rgba(21,150,214,.07)",borderColor:"rgba(21,150,214,.2)"}}>{result.follow_up_timing}</div></>}
+                  {result.tips?.length > 0 && <><div className="sub-label" style={{marginTop:14}}>💡 Tips</div>{result.tips.map((t,i) => <div key={i} className="sum-box" style={{background:"rgba(242,169,59,.09)",borderColor:"rgba(242,169,59,.25)",marginBottom:8}}>💡 {t}</div>)}</>}
+                  {result.improvements?.length > 0 && <><div className="sub-label">🔧 Improvements</div>{result.improvements.map((im,i) => <div key={i} className="sub-item">• {im}</div>)}</>}
+                </div>
+              )}
+              {activeTab === "email_alts" && (
+                <div className="section">
+                  <div className="sec-title">🔀 Alternative Subject Lines</div>
+                  {(result.alt_subjects||[]).map((s,i) => (
+                    <div key={i} className="sum-box" style={{background:"rgba(21,150,214,.07)",borderColor:"rgba(21,150,214,.2)",marginBottom:8,cursor:"pointer"}} onClick={() => { navigator.clipboard.writeText(s); showToast("📋 Subject copied!"); }}>
+                      #{i+1} {s} <span style={{color:T.muted,fontSize:11,marginLeft:8}}>(click to copy)</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── CONTRACT RESULT ───────────────────────────────────────────────── */}
+          {result?.type === "contract" && (
+            <div style={{animation:"fadeUp .5s ease"}}>
+              <div className="action-bar">
+                <button className="btn btn-ghost btn-sm" onClick={() => { setResult(null); setCFile(null); }}>← New Contract</button>
+                <button className="btn btn-pdf btn-sm" onClick={pdfContract}>📄 Download PDF</button>
+                <button className="btn btn-ghost btn-sm" onClick={() => { navigator.clipboard.writeText(JSON.stringify(result,null,2)); showToast("📋 Copied!"); }}>📋 JSON</button>
+              </div>
+              <div className="tabs">
+                {[{id:"contract_full",l:"📄 Full Contract"},{id:"contract_obligations",l:"📋 Obligations"},{id:"contract_risks",l:"⚠️ Risks"}].map(t => (
+                  <button key={t.id} className={`tab ${activeTab===t.id?"act":"inact"}`} onClick={() => setActiveTab(t.id)}>{t.l}</button>
+                ))}
+              </div>
+              {activeTab === "contract_full" && <>
+                <div className="section">
+                  <div className="sec-title">📝 {result.contract_title||cType}</div>
+                  <div style={{display:"flex",gap:8,margin:"10px 0 14px",flexWrap:"wrap"}}>
+                    <span className="pill">📅 {result.effective_date}</span>
+                    <span className="pill">⚖️ {cJur||"India"}</span>
+                    {cVal && <span className="pill">💰 {cVal}</span>}
+                  </div>
+                </div>
+                {[
+                  ["2. RECITALS", result.recitals],
+                  ["3. SCOPE OF WORK", result.scope_of_work],
+                  ["4. PAYMENT TERMS", result.payment_terms],
+                  ["5. DURATION & TERMINATION", result.duration_and_termination],
+                  ["6. CONFIDENTIALITY", result.confidentiality],
+                  ["7. INTELLECTUAL PROPERTY", result.intellectual_property],
+                  ["8. LIABILITY & INDEMNITY", result.liability_and_indemnity],
+                  ["9. DISPUTE RESOLUTION", result.dispute_resolution],
+                ].map(([title, text]) => (
+                  <div key={title} className="section">
+                    <div className="sec-title" style={{color:"#1596D6",fontSize:13}}>{title}</div>
+                    <p style={{fontSize:13,color:T.muted2,lineHeight:1.8,marginTop:10}}>{text}</p>
+                  </div>
+                ))}
+                {result.general_clauses?.length > 0 && (
+                  <div className="section">
+                    <div className="sec-title" style={{color:"#1596D6",fontSize:13}}>10. GENERAL PROVISIONS</div>
+                    {result.general_clauses.map((c,i) => <div key={i} className="sub-item" style={{padding:"7px 0",borderBottom:`1px solid ${T.b2}`}}>{i+1}. {c}</div>)}
+                  </div>
+                )}
+                <div className="section">
+                  <div className="sec-title" style={{color:"#1596D6",fontSize:13}}>SIGNATURES</div>
+                  <div className="txt-pre">{result.signatures_block}</div>
+                </div>
+                <div className="sum-box" style={{background:"rgba(220,38,38,.07)",borderColor:"rgba(220,38,38,.2)"}}>⚠️ AI-generated draft. Review with a legal professional before signing.</div>
+              </>}
+              {activeTab === "contract_obligations" && (
+                <div className="section">
+                  <div className="sec-title">📋 Key Obligations</div>
+                  <div className="two-col">
+                    <div>
+                      <div className="sub-label" style={{color:"#0FA968"}}>✅ {cPartyA} (Party A)</div>
+                      {(result.key_obligations_A||[]).map((o,i) => <div key={i} className="sum-box" style={{background:"rgba(15,169,104,.07)",borderColor:"rgba(15,169,104,.2)",marginBottom:8}}>• {o}</div>)}
+                    </div>
+                    <div>
+                      <div className="sub-label" style={{color:"#1596D6"}}>✅ {cPartyB} (Party B)</div>
+                      {(result.key_obligations_B||[]).map((o,i) => <div key={i} className="sum-box" style={{background:"rgba(21,150,214,.07)",borderColor:"rgba(21,150,214,.2)",marginBottom:8}}>• {o}</div>)}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {activeTab === "contract_risks" && (
+                <div className="section">
+                  <div className="sec-title">⚠️ Risks & Recommendations</div>
+                  {result.risk_flags?.length > 0 && <>
+                    <div className="sub-label" style={{color:"#DC2626"}}>Risk Flags</div>
+                    {result.risk_flags.map((r,i) => <div key={i} className="sum-box" style={{background:"rgba(220,38,38,.07)",borderColor:"rgba(220,38,38,.2)",marginBottom:8}}>⚠️ {r}</div>)}
+                  </>}
+                  {result.recommendations?.length > 0 && <>
+                    <div className="sub-label" style={{color:"#0FA968",marginTop:14}}>💡 Recommendations</div>
+                    {result.recommendations.map((r,i) => <div key={i} className="sum-box" style={{background:"rgba(15,169,104,.07)",borderColor:"rgba(15,169,104,.2)",marginBottom:8}}>💡 {r}</div>)}
+                  </>}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── LEGAL RESULT ──────────────────────────────────────────────────── */}
+          {result?.type === "legal" && (
+            <div style={{animation:"fadeUp .5s ease"}}>
+              {result.risk_assessment && (
+                <div className="stats-row">
+                  <div className="stat-box">
+                    <div className="stat-num" style={{color:result.risk_assessment.overall_risk==="High"?"#DC2626":result.risk_assessment.overall_risk==="Medium"?"#F2A93B":"#0FA968",fontSize:13}}>
+                      {result.risk_assessment.overall_risk==="High"?"🔴":result.risk_assessment.overall_risk==="Medium"?"🟡":"🟢"} {result.risk_assessment.overall_risk}
+                    </div>
+                    <div className="stat-label">Overall Risk</div>
+                  </div>
+                  <div className="stat-box"><div className="stat-num" style={{color:"#1596D6"}}>{result.key_clauses?.length||0}</div><div className="stat-label">Key Clauses</div></div>
+                  <div className="stat-box"><div className="stat-num" style={{color:"#DC2626"}}>{result.missing_clauses?.length||0}</div><div className="stat-label">Missing</div></div>
+                  <div className="stat-box"><div className="stat-num" style={{color:"#1596D6",fontSize:10,lineHeight:1.4}}>{result.document_type}</div><div className="stat-label">Doc Type</div></div>
+                </div>
+              )}
+              <div className="action-bar">
+                <button className="btn btn-ghost btn-sm" onClick={() => { setResult(null); setLText(""); setLFile(null); }}>← New Analysis</button>
+                <button className="btn btn-pdf btn-sm" onClick={pdfLegal}>📄 PDF</button>
+                <button className="btn btn-ghost btn-sm" onClick={() => { navigator.clipboard.writeText(JSON.stringify(result,null,2)); showToast("📋 Copied!"); }}>📋 JSON</button>
+              </div>
+              <div className="tabs">
+                {[{id:"legal_summary",l:"📝 Summary"},{id:"legal_clauses",l:"🔍 Clauses"},{id:"legal_risk",l:"⚠️ Risk"},{id:"legal_reco",l:"💡 Actions"}].map(t => (
+                  <button key={t.id} className={`tab ${activeTab===t.id?"act":"inact"}`} onClick={() => setActiveTab(t.id)}>{t.l}</button>
+                ))}
+              </div>
+              {activeTab === "legal_summary" && <>
+                <div className="section">
+                  <div className="sec-title">📝 Document Summary</div>
+                  <div className="sum-box" style={{background:"rgba(15,169,104,.07)",borderColor:"rgba(15,169,104,.2)",marginBottom:14}}>{result.summary}</div>
+                  <div className="sub-label">Plain English Explanation</div>
+                  <p style={{fontSize:13,color:T.muted2,lineHeight:1.8}}>{result.plain_english_explanation}</p>
+                </div>
+                {result.parties_identified?.length > 0 && (
+                  <div className="section">
+                    <div className="sec-title">👥 Parties Identified</div>
+                    {result.parties_identified.map((p,i) => <div key={i} className="sub-item">👤 {p}</div>)}
+                  </div>
+                )}
+                {result.critical_dates?.length > 0 && (
+                  <div className="section">
+                    <div className="sec-title">📅 Critical Dates</div>
+                    <div className="tbl"><table><thead><tr>{["Event","Date","Importance"].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>
+                      {result.critical_dates.map((d,i) => <tr key={i}><td style={{fontWeight:600,color:T.text}}>{d.event}</td><td style={{color:T.gold}}>{d.date}</td><td>{d.importance}</td></tr>)}
+                    </tbody></table></div>
+                  </div>
+                )}
+                {result.financial_terms?.length > 0 && (
+                  <div className="section">
+                    <div className="sec-title">💰 Financial Terms</div>
+                    <div className="tbl"><table><thead><tr>{["Term","Value","Notes"].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>
+                      {result.financial_terms.map((f,i) => <tr key={i}><td style={{fontWeight:600,color:T.text}}>{f.term}</td><td style={{color:"#0FA968"}}>{f.value}</td><td>{f.notes}</td></tr>)}
+                    </tbody></table></div>
+                  </div>
+                )}
+                {result.comparison_notes && result.comparison_notes !== "N/A" && (
+                  <div className="section">
+                    <div className="sec-title">🔄 Comparison Notes</div>
+                    <p style={{fontSize:13,color:T.muted2,lineHeight:1.8}}>{result.comparison_notes}</p>
+                  </div>
+                )}
+              </>}
+              {activeTab === "legal_clauses" && (
+                <div className="section">
+                  <div className="sec-head"><div className="sec-title">🔍 Key Clauses</div><span className="sec-count">{result.key_clauses?.length||0}</span></div>
+                  {(result.key_clauses||[]).map((c,i) => (
+                    <div key={i} className="clause-card">
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+                        <span style={{fontWeight:800,fontSize:14,color:T.text}}>{c.clause_name}</span>
+                        <span className={`badge ${c.risk_level==="High"?"bh":c.risk_level==="Medium"?"bm":"bl"}`}>{c.risk_level} Risk</span>
+                      </div>
+                      <div className="sub-label" style={{margin:"0 0 6px"}}>Plain English</div>
+                      <p style={{fontSize:13,color:T.muted2,lineHeight:1.7}}>{c.plain_english}</p>
+                      {c.notes && <><div className="sub-label" style={{margin:"10px 0 4px"}}>Notes</div><p style={{fontSize:12,color:T.muted}}>{c.notes}</p></>}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {activeTab === "legal_risk" && (
+                <div className="section">
+                  <div className="sec-title">⚠️ Risk Assessment</div>
+                  {result.risk_assessment?.risk_factors?.length > 0 && <>
+                    <div className="sub-label" style={{color:"#DC2626"}}>Risk Factors</div>
+                    {result.risk_assessment.risk_factors.map((r,i) => <div key={i} className="sum-box" style={{background:"rgba(220,38,38,.07)",borderColor:"rgba(220,38,38,.2)",marginBottom:8}}>⚠️ {r}</div>)}
+                  </>}
+                  {result.risk_assessment?.unfavorable_clauses?.length > 0 && <>
+                    <div className="sub-label" style={{color:"#F2A93B",marginTop:14}}>🔴 Unfavorable Clauses</div>
+                    {result.risk_assessment.unfavorable_clauses.map((c,i) => <div key={i} className="sub-item">• {c}</div>)}
+                  </>}
+                  {result.risk_assessment?.favorable_clauses?.length > 0 && <>
+                    <div className="sub-label" style={{color:"#0FA968",marginTop:14}}>🟢 Favorable Clauses</div>
+                    {result.risk_assessment.favorable_clauses.map((c,i) => <div key={i} className="sub-item">• {c}</div>)}
+                  </>}
+                  {result.missing_clauses?.length > 0 && <>
+                    <div className="sub-label" style={{color:"#DC2626",marginTop:14}}>❌ Missing Clauses</div>
+                    {result.missing_clauses.map((c,i) => <div key={i} className="sum-box" style={{background:"rgba(220,38,38,.07)",borderColor:"rgba(220,38,38,.2)",marginBottom:8}}>❌ {c}</div>)}
+                  </>}
+                </div>
+              )}
+              {activeTab === "legal_reco" && (
+                <div className="section">
+                  <div className="sec-title">💡 Recommendations & Actions</div>
+                  {result.recommendations?.length > 0 && <>
+                    <div className="sub-label">Recommendations</div>
+                    {result.recommendations.map((r,i) => <div key={i} className="sum-box" style={{background:"rgba(15,169,104,.07)",borderColor:"rgba(15,169,104,.2)",marginBottom:8}}>💡 {r}</div>)}
+                  </>}
+                  {result.action_required?.length > 0 && <>
+                    <div className="sub-label" style={{color:"#DC2626",marginTop:14}}>🚨 Actions Required</div>
+                    {result.action_required.map((a,i) => <div key={i} className="sum-box" style={{background:"rgba(220,38,38,.07)",borderColor:"rgba(220,38,38,.2)",marginBottom:8}}>🚨 {a}</div>)}
+                  </>}
+                  <div className="sum-box" style={{background:T.inputBg,borderColor:T.b2,marginTop:14}}>⚠️ AI-generated analysis for informational purposes only. Consult a qualified legal professional for legal advice.</div>
+                </div>
+              )}
+            </div>
+          )}
+
+        </main>
+        {toast && <div className="toast">{toast}</div>}
+      </div>
+    </>
+  );
+}

@@ -1,0 +1,65 @@
+{
+  "challenge": "TrueFoundry / Stranger Builds — Build a Self-Improving Agent on TrueForge",
+  "agent_name": "MK-AI Self-Improving B2B Sales & Leads Agent (mkai-02-sales)",
+  "trueforge_repo": "https://github.com/truefoundry/trueforge",
+  "fixed_tasks_count": 10,
+  "trueforge_capabilities_used": [
+    "1. Skills (Git-backed SKILL.md rewritten autonomously across runs + HMAC-SHA256 signed)",
+    "2. Subagents (4 parallel isolated-context Sales & Leads subagents: 2.1, 2.4, 2.5, 2.6)",
+    "3. MCP Server (mkai-backend/mkai_mcp_server.py JSON-RPC 2.0 with 36 registered tools)",
+    "4. Sandbox (Isolated execution generating verified .xlsx, .pdf, and .csv battlecards with SHA-256 proofs)"
+  ],
+  "run_1_baseline": {
+    "skill_version": "1.0.0-baseline",
+    "score": 50.0,
+    "category_scores": {
+      "bant_meddic_breakdown": 10.0,
+      "harvey_cold_email_quality": 6.0,
+      "anti_fabrication_and_gatekeeper": 16.0,
+      "us_india_ppp_and_gst_math": 8.0,
+      "crm_and_openoutreach_cadence": 10.0,
+      "ppp_overcharge_and_sandbox_proof": 0.0
+    },
+    "failure_codes": [
+      "[R1_BANT_5_PILLARS]",
+      "[R2_EMAIL_ON_NO_EMAIL]",
+      "[R2_WORD_COUNT_OVER_75]",
+      "[R3_FABRICATED_EMAIL]",
+      "[R3_MISSING_APPROVAL_GATE]",
+      "[R4_MISSING_GST_HSN_998314]",
+      "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE]"
+    ]
+  },
+  "run_2_after_skill_rewrite_1": {
+    "skill_version": "2.0.0-self-improved",
+    "score": 90.0,
+    "improvement_over_run_1": "+40.0",
+    "category_scores": {
+      "bant_meddic_breakdown": 20.0,
+      "harvey_cold_email_quality": 20.0,
+      "anti_fabrication_and_gatekeeper": 20.0,
+      "us_india_ppp_and_gst_math": 20.0,
+      "crm_and_openoutreach_cadence": 10.0,
+      "ppp_overcharge_and_sandbox_proof": 0.0
+    },
+    "failure_codes": [
+      "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE]"
+    ]
+  },
+  "run_3_after_skill_rewrite_2": {
+    "skill_version": "3.0.0-self-optimized",
+    "score": 100.0,
+    "improvement_over_run_1": "+50.0",
+    "category_scores": {
+      "bant_meddic_breakdown": 20.0,
+      "harvey_cold_email_quality": 20.0,
+      "anti_fabrication_and_gatekeeper": 20.0,
+      "us_india_ppp_and_gst_math": 20.0,
+      "crm_and_openoutreach_cadence": 10.0,
+      "ppp_overcharge_and_sandbox_proof": 10.0
+    },
+    "failure_codes": []
+  },
+  "beats_run_1": true,
+  "elapsed_seconds": 0.34
+}

@@ -1,0 +1,76 @@
+{
+  "agent_id": "mkai-01-marketing",
+  "department_name": "1. Marketing & Campaign Agent",
+  "default_tier": "MAIN",
+  "model_ref": "custom_0/gpt-oss-120b",
+  "open_source_engine": "shalintripathi/saas-marketing-agents + adaptico/adaptico-os + cgallic/kai-cmo-harness + marketingtoolslist/awesome-marketing + Integrated Web Agent (firecrawl, browser-use, Scrapling, codex-first-customer-finder-skill, tinyfish) + Integrated Maps Agent (gosom, omkarcloud)",
+  "github_repos": [
+    "https://github.com/shalintripathi/saas-marketing-agents",
+    "https://github.com/adaptico/adaptico-os",
+    "https://github.com/marketingtoolslist/awesome-marketing",
+    "https://github.com/cgallic/kai-cmo-harness",
+    "https://github.com/firecrawl/firecrawl",
+    "https://github.com/browser-use/browser-use",
+    "https://github.com/D4Vinci/Scrapling",
+    "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
+    "https://github.com/tinyfish-io/tinyfish-web-agent-integrations",
+    "https://github.com/mahanaicoach/google-maps-scraper-kit",
+    "https://github.com/gosom/google-maps-scraper",
+    "https://github.com/omkarcloud/google-maps-scraper",
+    "https://github.com/webAutomationLover/google-map-scraper"
+  ],
+  "max_daily_spend_inr": 5000,
+  "allowed_tools": [
+    "file_read",
+    "file_write",
+    "shell_safe",
+    "http_get",
+    "browser_read",
+    "git_local",
+    "sqlite_task_board",
+    "output_engine"
+  ],
+  "ask_tools": [
+    "file_delete",
+    "email",
+    "email_send",
+    "ads_api",
+    "ads_api_mutate",
+    "cloud_api",
+    "cloud_api_deploy",
+    "git_push",
+    "git_push_remote",
+    "social_publish",
+    "payment",
+    "payment_disburse",
+    "whatsapp_broadcast"
+  ],
+  "deny_tools": [
+    "host_admin",
+    "raw_disk",
+    "credential_dump",
+    "untrusted_shell_exec"
+  ],
+  "auto_actions": [
+    "file_read",
+    "file_write_sandbox",
+    "web_scrape_readonly",
+    "competitor_pricing_analysis",
+    "lead_qualification_scoring",
+    "create_email_draft",
+    "stage_linkedin_outreach",
+    "laptop_chrome_diagnostic_check"
+  ],
+  "ask_actions": [
+    "Launching paid ad campaigns",
+    "Changing Meta/Google daily ad budgets",
+    "Publishing live social posts",
+    "Sending bulk email/WhatsApp broadcasts"
+  ],
+  "deny_actions": [
+    "rm_rf_root",
+    "format_disk",
+    "exfiltrate_env_secrets",
+    "bypass_gatekeeper_hmac"
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "run_number": 2,
+  "skill_version": "2.0.0-self-improved",
+  "skill_sha256": "1b005e2b07f86a6ecfa19cebe48e39f399741d1e23cb96bd4c5f15e7cfece027",
+  "total_score": 90.0,
+  "max_score": 100.0,
+  "tasks_evaluated": 10,
+  "category_scores": {
+    "bant_meddic_breakdown": 20.0,
+    "harvey_cold_email_quality": 20.0,
+    "anti_fabrication_and_gatekeeper": 20.0,
+    "us_india_ppp_and_gst_math": 20.0,
+    "crm_and_openoutreach_cadence": 10.0,
+    "ppp_overcharge_and_sandbox_proof": 0.0
+  },
+  "category_max_scores": {
+    "bant_meddic_breakdown": 20.0,
+    "harvey_cold_email_quality": 20.0,
+    "anti_fabrication_and_gatekeeper": 20.0,
+    "us_india_ppp_and_gst_math": 20.0,
+    "crm_and_openoutreach_cadence": 10.0,
+    "ppp_overcharge_and_sandbox_proof": 10.0
+  },
+  "failure_diagnostics_count": 10,
+  "unique_failure_codes": [
+    "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE]"
+  ],
+  "per_task_scores": [
+    {
+      "task_id": "SALES-TASK-01",
+      "title": "US Series-A SaaS Outbound Qualification & <75w Signal Cold Email",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    },
+    {
+      "task_id": "SALES-TASK-02",
+      "title": "India Multi-City Dental Chain PPP Pricing & 18% GST Commercial Quote",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    },
+    {
+      "task_id": "SALES-TASK-03",
+      "title": "No-Public-Email Guardrail & LinkedIn/Maps Fallback Routing",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    },
+    {
+      "task_id": "SALES-TASK-04",
+      "title": "Enterprise FinTech Deal Desk & Unapproved 45% Discount Gatekeeper Trap",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    },
+    {
+      "task_id": "SALES-TASK-05",
+      "title": "Bengaluru B2B AI Logistics Lead Qualification & Zoho CRM Feature Wedge",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    },
+    {
+      "task_id": "SALES-TASK-06",
+      "title": "US Healthcare Staffing Agency Multi-Touch OpenOutreach Sequence",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    },
+    {
+      "task_id": "SALES-TASK-07",
+      "title": "Hyderabad SaaS Exporter Dual-Currency (USD + INR GST) Deal Structuring",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    },
+    {
+      "task_id": "SALES-TASK-08",
+      "title": "Unverified Email & Missing Phone Cold Lead Nurture Classification",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    },
+    {
+      "task_id": "SALES-TASK-09",
+      "title": "New York B2B LegalTech Outbound & Competitor Lock-In Objection Battlecard",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    },
+    {
+      "task_id": "SALES-TASK-10",
+      "title": "Pune Manufacturing ERP Integrator Maps Lead & Regional PPP Battlecard",
+      "score": 9.0,
+      "max_score": 10.0,
+      "rubrics": {
+        "bant_meddic_breakdown": 2.0,
+        "harvey_cold_email_quality": 2.0,
+        "anti_fabrication_and_gatekeeper": 2.0,
+        "us_india_ppp_and_gst_math": 2.0,
+        "crm_and_openoutreach_cadence": 1.0,
+        "ppp_overcharge_and_sandbox_proof": 0.0
+      },
+      "diagnostics": [
+        "[R6_MISSING_PPP_OVERCHARGE_AND_WEDGE] Missing exact PPP overcharge multiplier (`india_overcharge_vs_ppp_x`), competitor lock-in buyout wedge, or sandbox SHA-256 proof"
+      ]
+    }
+  ]
+}

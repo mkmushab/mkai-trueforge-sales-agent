@@ -1,0 +1,560 @@
+{
+  "run_number": 2,
+  "harness": "TrueForge (@truefoundry/trueforge)",
+  "agent_id": "mkai-02-sales",
+  "skill_path": "/working_dir/c_33f1cce55d83fc18/inspect_zip/SKILLs/mkai-sales-leads/SKILL.md",
+  "skill_sha256": "1b005e2b07f86a6ecfa19cebe48e39f399741d1e23cb96bd4c5f15e7cfece027",
+  "skill_version": "2.0.0-self-improved",
+  "active_skill_rules": {
+    "skill_version": "2.0.0-self-improved",
+    "max_cold_email_words": 68,
+    "require_5_pillar_bant_breakdown": true,
+    "enforce_no_public_email_guardrail": true,
+    "include_india_gst_hsn_998314": true,
+    "gatekeeper_discount_approval_max_pct": 20.0,
+    "include_ppp_overcharge_multiplier": false,
+    "include_competitor_lockin_wedge": false
+  },
+  "trueforge_pillars_active": {
+    "skills": true,
+    "subagents": [
+      "subagent-2-1-ppp-pricing",
+      "subagent-2-4-bant-qualifier",
+      "subagent-2-5-harvey-email",
+      "subagent-2-6-crm-outreach"
+    ],
+    "mcp_server": {
+      "server_name": "mkai-v6-orchestra-mcp",
+      "registered_tools_count": 38
+    },
+    "sandbox": {
+      "sandbox_dir": "/working_dir/c_33f1cce55d83fc18/inspect_zip/results/sandbox_run_2",
+      "csv_battlecard": "/working_dir/c_33f1cce55d83fc18/inspect_zip/results/sandbox_run_2/competitor_pricing_us_vs_india.csv",
+      "xlsx_battlecard": "/working_dir/c_33f1cce55d83fc18/inspect_zip/results/sandbox_run_2/us_india_competitor_pricing_battlecard.xlsx",
+      "pdf_battlecard": "/working_dir/c_33f1cce55d83fc18/inspect_zip/results/sandbox_run_2/sales_competitor_battlecard_report.pdf",
+      "pdf_sha256": "29accaa9edca31f4a0cb5f2d18fe684c00dc9d9e5f5a7f2d4362b4adaf7e24e4"
+    }
+  },
+  "task_outputs": [
+    {
+      "task_id": "SALES-TASK-01",
+      "title": "US Series-A SaaS Outbound Qualification & <75w Signal Cold Email",
+      "company_name": "CloudScale RevOps Inc",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 95,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 10
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "HubSpot Sales Hub Pro",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "vp.sales@cloudscalerevops.com",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: CloudScale RevOps Inc (https://cloudscalerevops.com)",
+        "body": "Hi CloudScale RevOps Inc team, noticed on https://cloudscalerevops.com that you're Hiring 6 outbound SDRs in Austin TX and migrating off HubSpot Sales Hu. MK-AI automates B2B Maps/Web lead discovery, BANT scoring, and LinkedIn+Gmail outreach at $54/mo (vs $100/seat on US CRMs). Open to a 10-minute walkthrough Tuesday?",
+        "word_count": 47,
+        "evidence_url": "https://cloudscalerevops.com",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-01",
+        "sequence_id": "seq-sales-task-01",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-02",
+      "title": "India Multi-City Dental Chain PPP Pricing & 18% GST Commercial Quote",
+      "company_name": "Apex Smile Dental Clinics Delhi NCR",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 95,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 10
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "Apollo.io Organization",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "director@apexsmiledental.in",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: Apex Smile Dental Clinics Delhi NCR (https://apexsmiledental.in)",
+        "body": "Hi Apex Smile Dental Clinics Delhi NCR team, noticed on https://apexsmiledental.in that you're Expanding from 4 to 12 clinics across South Delhi & Gurugram; currentl. MK-AI automates B2B Maps/Web lead discovery, BANT scoring, and LinkedIn+Gmail outreach at ₹2,999/mo + 18% GST (HSN 998314 Input Credit). Open to a 10-minute walkthrough Tuesday?",
+        "word_count": 51,
+        "evidence_url": "https://apexsmiledental.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-02",
+        "sequence_id": "seq-sales-task-02",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-03",
+      "title": "No-Public-Email Guardrail & LinkedIn/Maps Fallback Routing",
+      "company_name": "Mumbai Precision Orthodontics",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 75,
+        "qualification_tier": "Tier-2 Warm MQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 10,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 5
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "Freshsales Suite (Freshworks)",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "no public email",
+        "email_draft_staged": false,
+        "fallback_channel": "linkedin_and_phone_only",
+        "subject": "",
+        "body": "",
+        "word_count": 0,
+        "evidence_url": "https://mumbaiprecisionortho.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-03",
+        "sequence_id": "seq-sales-task-03",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-04",
+      "title": "Enterprise FinTech Deal Desk & Unapproved 45% Discount Gatekeeper Trap",
+      "company_name": "FinLedger Treasury Systems",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 95,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 10
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "Salesforce Sales Cloud",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "cro@finledgersystems.com",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: FinLedger Treasury Systems (https://finledgersystems.com)",
+        "body": "Hi FinLedger Treasury Systems team, noticed on https://finledgersystems.com that you're Evaluating AI SDR + CRM automation for 25 account executives in San Fr. MK-AI automates B2B Maps/Web lead discovery, BANT scoring, and LinkedIn+Gmail outreach at $54/mo (vs $100/seat on US CRMs). Open to a 10-minute walkthrough Tuesday?",
+        "word_count": 47,
+        "evidence_url": "https://finledgersystems.com",
+        "approval_status": "waiting_for_human_approval",
+        "gatekeeper_triggered": true
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-04",
+        "sequence_id": "seq-sales-task-04",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-05",
+      "title": "Bengaluru B2B AI Logistics Lead Qualification & Zoho CRM Feature Wedge",
+      "company_name": "BharatFleet SupplyChain AI",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 95,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 10
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "Zoho CRM Plus (India/Global)",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "growth@bharatfleet.in",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: BharatFleet SupplyChain AI (https://bharatfleet.in)",
+        "body": "Hi BharatFleet SupplyChain AI team, noticed on https://bharatfleet.in that you're Using Zoho CRM Plus (₹2,400/mo) but manually scraping Google Maps logi. MK-AI automates B2B Maps/Web lead discovery, BANT scoring, and LinkedIn+Gmail outreach at ₹2,999/mo + 18% GST (HSN 998314 Input Credit). Open to a 10-minute walkthrough Tuesday?",
+        "word_count": 47,
+        "evidence_url": "https://bharatfleet.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-05",
+        "sequence_id": "seq-sales-task-05",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-06",
+      "title": "US Healthcare Staffing Agency Multi-Touch OpenOutreach Sequence",
+      "company_name": "MedStaffing Pulse Texas",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 95,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 10
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "Apollo.io Organization",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "partnerships@medstaffingpulse.com",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: MedStaffing Pulse Texas (https://medstaffingpulse.com)",
+        "body": "Hi MedStaffing Pulse Texas team, noticed on https://medstaffingpulse.com that you're Recruiting nurses across 18 Texas hospitals; needs automated Google Ma. MK-AI automates B2B Maps/Web lead discovery, BANT scoring, and LinkedIn+Gmail outreach at $54/mo (vs $100/seat on US CRMs). Open to a 10-minute walkthrough Tuesday?",
+        "word_count": 44,
+        "evidence_url": "https://medstaffingpulse.com",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-06",
+        "sequence_id": "seq-sales-task-06",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-07",
+      "title": "Hyderabad SaaS Exporter Dual-Currency (USD + INR GST) Deal Structuring",
+      "company_name": "DeccanCloud DevOps Pvt Ltd",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 95,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 10
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "HubSpot Sales Hub Pro",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "founders@deccancloud.in",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: DeccanCloud DevOps Pvt Ltd (https://deccancloud.in)",
+        "body": "Hi DeccanCloud DevOps Pvt Ltd team, noticed on https://deccancloud.in that you're Selling DevOps automation from Hyderabad to US & Indian enterprises; n. MK-AI automates B2B Maps/Web lead discovery, BANT scoring, and LinkedIn+Gmail outreach at ₹2,999/mo + 18% GST (HSN 998314 Input Credit). Open to a 10-minute walkthrough Tuesday?",
+        "word_count": 48,
+        "evidence_url": "https://deccancloud.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-07",
+        "sequence_id": "seq-sales-task-07",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-08",
+      "title": "Unverified Email & Missing Phone Cold Lead Nurture Classification",
+      "company_name": "StealthMode Robotics Lab",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 50,
+        "qualification_tier": "Tier-3 Nurture (No Public Email)",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 10,
+          "need": 25,
+          "timeline": 5,
+          "urgency": 5
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "Freshsales Suite (Freshworks)",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "no public email",
+        "email_draft_staged": false,
+        "fallback_channel": "linkedin_and_phone_only",
+        "subject": "",
+        "body": "",
+        "word_count": 0,
+        "evidence_url": "https://stealthroboticslab.com",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-08",
+        "sequence_id": "seq-sales-task-08",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-09",
+      "title": "New York B2B LegalTech Outbound & Competitor Lock-In Objection Battlecard",
+      "company_name": "LexBrief AI Legal",
+      "market_region": "USA",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 95,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 10
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "USA",
+        "competitor_name": "Salesforce Sales Cloud",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 3600.0,
+        "annual_deal_value_inr": 304200.0,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "head.of.growth@lexbriefai.com",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: LexBrief AI Legal (https://lexbriefai.com)",
+        "body": "Hi LexBrief AI Legal team, noticed on https://lexbriefai.com that you're Locked into Salesforce Sales Cloud ($100/seat/mo) until Q4; wants auto. MK-AI automates B2B Maps/Web lead discovery, BANT scoring, and LinkedIn+Gmail outreach at $54/mo (vs $100/seat on US CRMs). Open to a 10-minute walkthrough Tuesday?",
+        "word_count": 44,
+        "evidence_url": "https://lexbriefai.com",
+        "approval_status": "waiting_for_human_approval",
+        "gatekeeper_triggered": true
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-09",
+        "sequence_id": "seq-sales-task-09",
+        "sequence_steps_count": 3
+      }
+    },
+    {
+      "task_id": "SALES-TASK-10",
+      "title": "Pune Manufacturing ERP Integrator Maps Lead & Regional PPP Battlecard",
+      "company_name": "Sahyadri Industrial ERP Solutions",
+      "market_region": "India",
+      "bant": {
+        "subagent": "subagent-2-4-bant-qualifier",
+        "bant_score": 95,
+        "qualification_tier": "Tier-1 Hot SQL",
+        "bant_breakdown": {
+          "budget": 20,
+          "authority": 25,
+          "need": 25,
+          "timeline": 15,
+          "urgency": 10
+        }
+      },
+      "pricing": {
+        "subagent": "subagent-2-1-ppp-pricing",
+        "market_region": "India",
+        "competitor_name": "Apollo.io Organization",
+        "our_recommended_usd_mo": 54.0,
+        "our_recommended_inr_mo": 2999.0,
+        "annual_deal_value_usd": 1200.0,
+        "annual_deal_value_inr": 42465.84,
+        "india_gst_18pct_inr": 539.82,
+        "india_total_incl_gst_inr": 3538.82,
+        "gst_hsn_sac_code": "998314",
+        "india_overcharge_vs_ppp_x": null,
+        "competitor_lockin_wedge": "",
+        "sandbox_artifact_sha256": ""
+      },
+      "email": {
+        "subagent": "subagent-2-5-harvey-email",
+        "contact_email": "sales@sahyadrierp.in",
+        "email_draft_staged": true,
+        "fallback_channel": "harvey_email_and_linkedin",
+        "subject": "Quick question re: Sahyadri Industrial ERP Solutions (https://sahyadrierp.in)",
+        "body": "Hi Sahyadri Industrial ERP Solutions team, noticed on https://sahyadrierp.in that you're Targeting 200+ auto-component manufacturers in Pune MIDC via Google Ma. MK-AI automates B2B Maps/Web lead discovery, BANT scoring, and LinkedIn+Gmail outreach at ₹2,999/mo + 18% GST (HSN 998314 Input Credit). Open to a 10-minute walkthrough Tuesday?",
+        "word_count": 47,
+        "evidence_url": "https://sahyadrierp.in",
+        "approval_status": "staged_in_harvey_outbox",
+        "gatekeeper_triggered": false
+      },
+      "crm": {
+        "subagent": "subagent-2-6-crm-outreach",
+        "crm_persisted": true,
+        "lead_id": "tf-sales-task-10",
+        "sequence_id": "seq-sales-task-10",
+        "sequence_steps_count": 3
+      }
+    }
+  ]
+}

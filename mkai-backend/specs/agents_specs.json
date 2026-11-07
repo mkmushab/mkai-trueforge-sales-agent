@@ -1,0 +1,596 @@
+{
+  "platform": "MK AI v6.1 — 6 Core Business Agents (with Built-in Web Agent, Maps Agent & Laptop Chrome Fallback)",
+  "version": "6.1.0",
+  "total_main_agents": 6,
+  "total_sub_agents": 36,
+  "router_config": {
+    "base_url": "https://api.generalcompute.com/v1",
+    "tiers": {
+      "main": {
+        "model": "gpt-oss-120b",
+        "display_name": "gptoss120B (Main Execution & Sales Orchestra)",
+        "env_key": "MK_MAIN_API_KEY",
+        "provider_id": "custom_0"
+      },
+      "heavy": {
+        "model": "deepseek-v3.2",
+        "display_name": "Deepseek V3.2 (Heavy Pricing Math, Strategy & Analytics)",
+        "env_key": "MK_HEAVY_API_KEY",
+        "provider_id": "custom_1"
+      },
+      "fast": {
+        "model": "gemma-4-31B-it",
+        "display_name": "gemma 31B (Fast Lead Scoring, Support Triage & Scraping)",
+        "env_key": "MK_FAST_API_KEY",
+        "provider_id": "custom_2"
+      }
+    }
+  },
+  "departments": [
+    {
+      "num": 1,
+      "id": "mkai-01-marketing",
+      "skill_id": "mkai-marketing-campaign",
+      "name": "1. Marketing & Campaign Agent",
+      "short_role": "SaaS Marketing + Adaptico OS + Kai CMO + Awesome Marketing + Built-in Web & Maps Agents",
+      "group_id": "core_business",
+      "icon_svg": "Briefcase",
+      "model_tier": "main",
+      "model_ref": "custom_0/gpt-oss-120b",
+      "max_daily_spend_inr": 5000,
+      "open_source_engine": "shalintripathi/saas-marketing-agents + adaptico/adaptico-os + cgallic/kai-cmo-harness + marketingtoolslist/awesome-marketing + Integrated Web Agent (firecrawl, browser-use, Scrapling, codex-first-customer-finder-skill, tinyfish) + Integrated Maps Agent (gosom, omkarcloud)",
+      "github_repos": [
+        "https://github.com/shalintripathi/saas-marketing-agents",
+        "https://github.com/adaptico/adaptico-os",
+        "https://github.com/marketingtoolslist/awesome-marketing",
+        "https://github.com/cgallic/kai-cmo-harness",
+        "https://github.com/firecrawl/firecrawl",
+        "https://github.com/browser-use/browser-use",
+        "https://github.com/D4Vinci/Scrapling",
+        "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
+        "https://github.com/tinyfish-io/tinyfish-web-agent-integrations",
+        "https://github.com/mahanaicoach/google-maps-scraper-kit",
+        "https://github.com/gosom/google-maps-scraper",
+        "https://github.com/omkarcloud/google-maps-scraper",
+        "https://github.com/webAutomationLover/google-map-scraper"
+      ],
+      "base_skills": [
+        "mkai-marketing-campaign",
+        "content-planner",
+        "article-writer",
+        "daily-trending",
+        "web-search",
+        "playwright",
+        "xlsx"
+      ],
+      "approval_actions": [
+        "Launching paid ad campaigns",
+        "Changing Meta/Google daily ad budgets",
+        "Publishing live social posts",
+        "Sending bulk email/WhatsApp broadcasts"
+      ],
+      "description": "Autonomous AI CMO & multi-channel campaign engine combining saas-marketing-agents, adaptico-os, awesome-marketing, and kai-cmo-harness with BUILT-IN Web Agent (Firecrawl + Browser-Use + Scrapling + First-Customer-Finder + Laptop Chrome Fallback) & Maps Agent for B2B positioning, USA vs. India campaign strategy, 30-day calendars, ad hooks, and technical SEO/GEO.",
+      "example_tasks": [
+        "Build a complete B2B marketing & lead-gen campaign for my company with USA ($) vs. India (₹) positioning and 30-day calendar.",
+        "Scrape competitor landing pages via built-in Web Agent, find early buyers, and generate high-converting LinkedIn + Google Ads hooks."
+      ],
+      "mcp_tools": [
+        "mkai_delegate_subagent",
+        "mkai_seo_website_autofix",
+        "web_agent_scrape_with_chrome_fallback",
+        "maps_leads_search",
+        "firecrawl_scrape",
+        "browser_navigate_extract",
+        "launch_video",
+        "fs_write_file"
+      ],
+      "sub_agents": [
+        [
+          "1.1",
+          "AI CMO & GTM Positioning Agent",
+          "Design SaaS positioning, value propositions, and GTM launch playbooks via kai-cmo-harness & saas-marketing-agents",
+          "main"
+        ],
+        [
+          "1.2",
+          "Adaptico Multi-Channel Campaign Agent",
+          "Orchestrate 30-day multi-channel content calendars across LinkedIn, X, Email, and YouTube via adaptico-os",
+          "main"
+        ],
+        [
+          "1.3",
+          "Performance Ads & ROAS Agent",
+          "Optimize Google, Meta, and LinkedIn B2B ad budgets, creatives, and CAC/ROAS targets",
+          "main"
+        ],
+        [
+          "1.4",
+          "Technical SEO, GEO & Landing Page Fixer",
+          "Audit HTML metadata, OpenGraph, JSON-LD, robots.txt, sitemap.xml, and llms.txt",
+          "main"
+        ],
+        [
+          "1.5",
+          "Viral Hooks & Conversion Copywriter",
+          "Write high-converting hooks, landing page copy, and email sequences via awesome-marketing frameworks",
+          "fast"
+        ],
+        [
+          "1.6",
+          "Built-in Web & First-Customer Scraper",
+          "Scrape competitor ads/pages via Firecrawl + Scrapling + First-Customer-Finder and auto-open Laptop Chrome on blocks",
+          "fast"
+        ],
+        [
+          "1.7",
+          "Built-in Maps Local Campaign Scout",
+          "Discover regional B2B clusters across USA & India via Google Maps Scraper for geo-targeted campaigns",
+          "fast"
+        ]
+      ]
+    },
+    {
+      "num": 2,
+      "id": "mkai-02-sales",
+      "skill_id": "mkai-sales-leads",
+      "name": "2. Sales & Lead Qualification Agent (Flagship #1)",
+      "short_role": "USA ($) vs India (₹) Pricing + Harvey + AI-Sales-Agent + OpenOutreach + EspoCRM + Brag + Built-in Web & Maps Agents",
+      "group_id": "flagship_sales",
+      "icon_svg": "Lightning",
+      "model_tier": "main",
+      "model_ref": "custom_0/gpt-oss-120b",
+      "max_daily_spend_inr": 0,
+      "open_source_engine": "ethanplusai/harvey + kaymen99/AI-Sales-agent + latent-spaces/brag + eracle/OpenOutreach + espocrm/espocrm + Integrated Web Agent (firecrawl, browser-use, Scrapling, codex-first-customer-finder-skill, tinyfish) + Integrated Maps Agent (google-maps-scraper-kit, gosom, omkarcloud, webAutomationLover)",
+      "github_repos": [
+        "https://github.com/ethanplusai/harvey",
+        "https://github.com/kaymen99/AI-Sales-agent",
+        "https://github.com/latent-spaces/brag",
+        "https://github.com/eracle/OpenOutreach",
+        "https://github.com/espocrm/espocrm",
+        "https://github.com/firecrawl/firecrawl",
+        "https://github.com/browser-use/browser-use",
+        "https://github.com/D4Vinci/Scrapling",
+        "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
+        "https://github.com/tinyfish-io/tinyfish-web-agent-integrations",
+        "https://github.com/mahanaicoach/google-maps-scraper-kit",
+        "https://github.com/gosom/google-maps-scraper",
+        "https://github.com/omkarcloud/google-maps-scraper",
+        "https://github.com/webAutomationLover/google-map-scraper"
+      ],
+      "base_skills": [
+        "mkai-sales-leads",
+        "imap-smtp-email",
+        "playwright",
+        "docx",
+        "pdf",
+        "xlsx",
+        "web-search"
+      ],
+      "approval_actions": [
+        "Sending external cold emails via Gmail",
+        "Sending LinkedIn connection requests or InMails",
+        "Sending official commercial quotes or discounts",
+        "Mutating live production CRM deal stages"
+      ],
+      "description": "Flagship #1 Revenue & Sales Powerhouse with BUILT-IN Web Agent (Firecrawl + Browser-Use + Scrapling + First-Customer-Finder + TinyFish + Automatic Laptop Chrome Fallback) and BUILT-IN Maps Agent (Mahanaicoach + Gosom + OmkarCloud + WebAutomationLover): Executes deep USA ($ USD) vs. India (₹ INR) competitor pricing & PPP analysis, BANT/MEDDIC lead qualification (kaymen99/AI-Sales-agent), <75w signal-based cold emails (ethanplusai/harvey), LinkedIn + Gmail outreach sequences (eracle/OpenOutreach), full EspoCRM pipeline tracking (espocrm/espocrm), and 20s personalized sales pitch videos (latent-spaces/brag).",
+      "example_tasks": [
+        "Run a complete USA ($ USD) vs. India (₹ INR) competitor pricing analysis, qualify B2B leads via built-in Web & Maps Agents, and stage Gmail + LinkedIn outreach.",
+        "Find 10 target B2B buyers for my company, score them with BANT/MEDDIC (0-100), sync to EspoCRM, and draft <75w Harvey cold emails.",
+        "Generate a dual-currency (USD & INR with 18% GST) sales proposal and a 20s Brag pitch video."
+      ],
+      "mcp_tools": [
+        "sales_us_india_pricing_analysis",
+        "sales_qualify_and_score_leads",
+        "sales_espocrm_sync",
+        "web_agent_scrape_with_chrome_fallback",
+        "maps_leads_search",
+        "maps_job_status",
+        "maps_download_csv",
+        "harvey_status",
+        "harvey_outbox",
+        "harvey_replies",
+        "harvey_stage_draft",
+        "gmail_connect_and_send",
+        "linkedin_connect_and_outreach",
+        "launch_video",
+        "firecrawl_scrape"
+      ],
+      "sub_agents": [
+        [
+          "2.1",
+          "USA vs. India Competitor Pricing & PPP Strategist",
+          "Scrape & compare competitor pricing in USA ($ USD) vs. India (₹ INR), compute PPP multipliers, 18% GST vs US sales tax, and build winning price battlecards",
+          "heavy"
+        ],
+        [
+          "2.2",
+          "Built-in Web Agent & Laptop Chrome Scraper",
+          "Scrape prospect & competitor sites via Firecrawl + Scrapling + Browser-Use + First-Customer-Finder; auto-open Laptop Chrome (Port 9222) on any CAPTCHA/login wall",
+          "main"
+        ],
+        [
+          "2.3",
+          "Built-in Google Maps B2B Lead Extractor",
+          "Extract local & global B2B leads (phone, website, rating, verified email) across USA & India cities via Gosom + OmkarCloud + Mahanaicoach + WebAutomationLover",
+          "fast"
+        ],
+        [
+          "2.4",
+          "AI-Sales-Agent BANT / MEDDIC Qualifier",
+          "Score leads 0-100 across Budget (USD/INR), Authority, Need, Timeline, and Urgency via kaymen99/AI-Sales-agent",
+          "fast"
+        ],
+        [
+          "2.5",
+          "Harvey <75w Signal Cold Email Agent",
+          "Draft hyper-personalized <75-word cold emails citing verified prospect website evidence and stage in Harvey approval outbox",
+          "main"
+        ],
+        [
+          "2.6",
+          "OpenOutreach LinkedIn + Gmail Cadence Agent",
+          "Orchestrate multi-step LinkedIn connection notes, InMails, and Gmail follow-up sequences via eracle/OpenOutreach",
+          "main"
+        ],
+        [
+          "2.7",
+          "EspoCRM Pipeline & Deal Desk Manager",
+          "Manage Leads, Accounts, Contacts, and Dual-Currency (USD/INR) Opportunities in EspoCRM",
+          "fast"
+        ],
+        [
+          "2.8",
+          "Brag Video Pitch & Objection Closing Specialist",
+          "Generate 20s personalized sales videos via latent-spaces/brag, dual-currency PDF/DOCX proposals, and objection battlecards",
+          "heavy"
+        ]
+      ]
+    },
+    {
+      "num": 3,
+      "id": "mkai-03-research",
+      "skill_id": "mkai-research-intelligence",
+      "name": "3. Research & Market Intelligence Agent",
+      "short_role": "Market-Intelligence-Agent + SuperLeads + Owli Research + Predictive Analytics + Built-in Web & Maps Agents",
+      "group_id": "core_business",
+      "icon_svg": "Brain",
+      "model_tier": "heavy",
+      "model_ref": "custom_1/deepseek-v3.2",
+      "max_daily_spend_inr": 0,
+      "open_source_engine": "vikas-kashyap97/Market-Intelligence-Agent + fleixweb/superleads + S313S/owli-market-research + hemantdpatil/Predictive-Marketing-Analytics + Integrated Web Agent (firecrawl, browser-use, Scrapling, tinyfish) + Integrated Maps Agent (gosom, omkarcloud)",
+      "github_repos": [
+        "https://github.com/vikas-kashyap97/Market-Intelligence-Agent",
+        "https://github.com/fleixweb/superleads",
+        "https://github.com/S313S/owli-market-research",
+        "https://github.com/hemantdpatil/Predictive-Marketing-Analytics",
+        "https://github.com/firecrawl/firecrawl",
+        "https://github.com/browser-use/browser-use",
+        "https://github.com/D4Vinci/Scrapling",
+        "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
+        "https://github.com/tinyfish-io/tinyfish-web-agent-integrations",
+        "https://github.com/mahanaicoach/google-maps-scraper-kit",
+        "https://github.com/gosom/google-maps-scraper",
+        "https://github.com/omkarcloud/google-maps-scraper",
+        "https://github.com/webAutomationLover/google-map-scraper"
+      ],
+      "base_skills": [
+        "mkai-research-intelligence",
+        "web-search",
+        "playwright",
+        "pdf",
+        "xlsx",
+        "docx"
+      ],
+      "approval_actions": [
+        "Purchasing paid third-party market datasets",
+        "Publishing external market research reports"
+      ],
+      "description": "Deep market intelligence & predictive analytics powerhouse combining Market-Intelligence-Agent, SuperLeads, Owli Market Research, and Predictive-Marketing-Analytics with BUILT-IN Web Agent (Firecrawl + Scrapling + TinyFish + Auto Laptop Chrome Check) & Maps Agent for TAM/SAM/SOM sizing, B2B firmographic enrichment, buyer personas, and CLV/churn forecasting.",
+      "example_tasks": [
+        "Analyze the US vs. India B2B market landscape, TAM/SAM/SOM, and top 5 competitor moves with verified links.",
+        "Run SuperLeads enrichment and Predictive-Marketing-Analytics CLV & price elasticity modeling."
+      ],
+      "mcp_tools": [
+        "web_agent_scrape_with_chrome_fallback",
+        "maps_leads_search",
+        "firecrawl_scrape",
+        "firecrawl_map",
+        "browser_navigate_extract",
+        "sales_us_india_pricing_analysis",
+        "agent_reach_doctor",
+        "fs_write_file"
+      ],
+      "sub_agents": [
+        [
+          "3.1",
+          "Market-Intelligence & Competitor Radar Agent",
+          "Track competitor product launches, positioning shifts, and TAM/SAM/SOM sizing via vikas-kashyap97/Market-Intelligence-Agent",
+          "heavy"
+        ],
+        [
+          "3.2",
+          "SuperLeads B2B Firmographic Scout",
+          "Discover high-intent B2B accounts and enrich decision-maker profiles via fleixweb/superleads + Built-in Maps Agent",
+          "main"
+        ],
+        [
+          "3.3",
+          "Owli Deep Market & Persona Researcher",
+          "Synthesize voice-of-customer reviews, G2/Capterra sentiment, and ICP buyer personas via S313S/owli-market-research",
+          "main"
+        ],
+        [
+          "3.4",
+          "Predictive Marketing & Price Elasticity Analyst",
+          "Model customer lifetime value (CLV), churn propensity, and US/India demand elasticity via hemantdpatil/Predictive-Marketing-Analytics",
+          "heavy"
+        ],
+        [
+          "3.5",
+          "Built-in Web & Chrome Deep Research Crawler",
+          "Crawl deep web sources via Firecrawl + Scrapling + TinyFish and auto-open Laptop Chrome on login/CAPTCHA walls",
+          "fast"
+        ]
+      ]
+    },
+    {
+      "num": 4,
+      "id": "mkai-04-ceo",
+      "skill_id": "mkai-strategy-ceo",
+      "name": "4. Business Strategy / AI CEO Agent",
+      "short_role": "Manifesto + Sovereign-Suite + Orion CEO + Unpod Consulting + Built-in Web & Maps Agents",
+      "group_id": "core_business",
+      "icon_svg": "Scales",
+      "model_tier": "heavy",
+      "model_ref": "custom_1/deepseek-v3.2",
+      "max_daily_spend_inr": 0,
+      "open_source_engine": "marsxhq/manifesto + Repugrid/sovereign-suite + sujalmanpara/orion-ceo-agent + unpod-ai/unpod + Integrated Web Agent + Integrated Maps Agent",
+      "github_repos": [
+        "https://github.com/marsxhq/manifesto",
+        "https://github.com/Repugrid/sovereign-suite",
+        "https://github.com/sujalmanpara/orion-ceo-agent",
+        "https://github.com/unpod-ai/unpod",
+        "https://github.com/firecrawl/firecrawl",
+        "https://github.com/browser-use/browser-use",
+        "https://github.com/D4Vinci/Scrapling",
+        "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
+        "https://github.com/tinyfish-io/tinyfish-web-agent-integrations",
+        "https://github.com/mahanaicoach/google-maps-scraper-kit",
+        "https://github.com/gosom/google-maps-scraper",
+        "https://github.com/omkarcloud/google-maps-scraper",
+        "https://github.com/webAutomationLover/google-map-scraper"
+      ],
+      "base_skills": [
+        "mkai-strategy-ceo",
+        "create-plan",
+        "pptx",
+        "pdf",
+        "xlsx",
+        "web-search"
+      ],
+      "approval_actions": [
+        "Finalizing company-wide OKRs or budget reallocations",
+        "Approving cross-agent Orchestra high-risk gates",
+        "Sending board or executive strategy memos externally"
+      ],
+      "description": "Senior management consulting specialist for competitive analysis, market entry strategy, business model design, growth planning, organizational strategy, and strategic decision-making — translating complex market dynamics into clear, actionable strategies that create sustainable competitive advantage. Powered by marsxhq/manifesto, Repugrid/sovereign-suite, sujalmanpara/orion-ceo-agent, unpod-ai/unpod, and built-in Web & Maps Agents.",
+      "example_tasks": [
+        "Design a dual-market (USA & India) market entry strategy, business model, pricing tiers, and sustainable competitive moat.",
+        "Run a Full 6-Agent Orchestra mission and synthesize the executive board strategy deck & OKR scorecard."
+      ],
+      "mcp_tools": [
+        "mkai_run_full_orchestra",
+        "mkai_delegate_subagent",
+        "sales_us_india_pricing_analysis",
+        "web_agent_scrape_with_chrome_fallback",
+        "maps_leads_search",
+        "archify_generate_diagram",
+        "fs_write_file"
+      ],
+      "sub_agents": [
+        [
+          "4.1",
+          "Competitive Analysis & Market Entry Strategist",
+          "Build Porter's 5 Forces, 7S, Wardley Maps, and USA vs. India market entry strategies via sujalmanpara/orion-ceo-agent",
+          "heavy"
+        ],
+        [
+          "4.2",
+          "Business Model & Unit Economics Architect",
+          "Design pricing tiers, SaaS unit economics (CAC, LTV, Payback, Gross Margin), and sovereign governance via Repugrid/sovereign-suite",
+          "heavy"
+        ],
+        [
+          "4.3",
+          "Category Design & Founder Manifesto Agent",
+          "Craft category-defining strategic narratives, positioning manifestos, and board memos via marsxhq/manifesto",
+          "main"
+        ],
+        [
+          "4.4",
+          "Growth Planning & Organizational OKR Engine",
+          "Translate strategic goals into quarterly OKRs, hiring roadmaps, and departmental KPIs",
+          "main"
+        ],
+        [
+          "4.5",
+          "Unpod Multi-Agent Orchestra Commander",
+          "Coordinate all 6 Core Agents (with built-in Web & Maps engines) in full orchestra mode via unpod-ai/unpod",
+          "heavy"
+        ]
+      ]
+    },
+    {
+      "num": 5,
+      "id": "mkai-05-fundraising",
+      "skill_id": "mkai-fundraising-ir",
+      "name": "5. Fundraising & Investor Relations Agent",
+      "short_role": "IR-Kit + CapTable + CiviCRM + VC-Fundraising + Auto-Make-Money + Evalyze + Built-in Web Agent",
+      "group_id": "core_business",
+      "icon_svg": "FinancingOne",
+      "model_tier": "heavy",
+      "model_ref": "custom_1/deepseek-v3.2",
+      "max_daily_spend_inr": 0,
+      "open_source_engine": "howieyoung/ir-kit + captableinc/captable + civicrm/civicrm-core + tjboudreaux/cc-skills-vc-fundraising + MrZilinXiao/Auto-Make-Money + evalyze-ai/awesome-startup-fundraising + Integrated Web Agent",
+      "github_repos": [
+        "https://github.com/howieyoung/ir-kit",
+        "https://github.com/captableinc/captable",
+        "https://github.com/civicrm/civicrm-core",
+        "https://github.com/tjboudreaux/cc-skills-vc-fundraising",
+        "https://github.com/MrZilinXiao/Auto-Make-Money",
+        "https://github.com/evalyze-ai/awesome-startup-fundraising",
+        "https://github.com/firecrawl/firecrawl",
+        "https://github.com/browser-use/browser-use",
+        "https://github.com/D4Vinci/Scrapling",
+        "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
+        "https://github.com/tinyfish-io/tinyfish-web-agent-integrations"
+      ],
+      "base_skills": [
+        "mkai-fundraising-ir",
+        "pptx",
+        "xlsx",
+        "pdf",
+        "docx",
+        "imap-smtp-email",
+        "web-search"
+      ],
+      "approval_actions": [
+        "Sending cold/warm outreach emails to VCs or Angel investors",
+        "Sharing confidential data room financial models",
+        "Circulating term sheets or SAFE agreements"
+      ],
+      "description": "End-to-end VC fundraising, cap table modeling, investor CRM, and revenue monetization engine combining ir-kit, captable, civicrm-core, cc-skills-vc-fundraising, Auto-Make-Money, and awesome-startup-fundraising with built-in Web Agent for VC thesis research and Gmail/LinkedIn investor outreach.",
+      "example_tasks": [
+        "Model a $2M Seed SAFE cap table dilution worksheet (.xlsx) and generate a 12-slide VC pitch deck (.pptx).",
+        "Build a target US & India VC investor pipeline in CiviCRM format and stage personalized investor outreach emails."
+      ],
+      "mcp_tools": [
+        "mkai_calculate_gst_and_profit",
+        "web_agent_scrape_with_chrome_fallback",
+        "workspace_create_draft",
+        "harvey_stage_draft",
+        "fs_write_file"
+      ],
+      "sub_agents": [
+        [
+          "5.1",
+          "VC Pitch Deck & Narrative Specialist",
+          "Author Sequoia/YC-grade pitch decks, investment memos, and partner Q&A prep via tjboudreaux/cc-skills-vc-fundraising",
+          "main"
+        ],
+        [
+          "5.2",
+          "Cap Table, SAFE & Dilution Modeler",
+          "Calculate pre/post-money SAFE conversions, ESOP pool expansion, and series dilution waterfalls via captableinc/captable",
+          "heavy"
+        ],
+        [
+          "5.3",
+          "IR-Kit Data Room & Investor Update Manager",
+          "Structure investor data rooms, KPI dashboards, and monthly investor letters via howieyoung/ir-kit",
+          "main"
+        ],
+        [
+          "5.4",
+          "CiviCRM Investor Pipeline & VC Scout",
+          "Track angel/VC relationships, commitment stages, and follow-ups via civicrm/civicrm-core & evalyze-ai/awesome-startup-fundraising",
+          "main"
+        ],
+        [
+          "5.5",
+          "Auto-Make-Money Revenue & Cashflow Architect",
+          "Design rapid monetization loops, self-liquidating offers, and cashflow acceleration models via MrZilinXiao/Auto-Make-Money",
+          "heavy"
+        ],
+        [
+          "5.6",
+          "Pitch Readiness & Term Sheet Evaluator",
+          "Audit pitch readiness scores, valuation multiples (US vs. India), and term sheet protective provisions",
+          "heavy"
+        ]
+      ]
+    },
+    {
+      "num": 6,
+      "id": "mkai-06-support",
+      "skill_id": "mkai-customer-support",
+      "name": "6. Customer Support Agent",
+      "short_role": "Agentic-AI-Starters + Agent-Desk + AnythingLLM-Embed + Helpin + AI-CS-Agent + Built-in Web Agent",
+      "group_id": "core_business",
+      "icon_svg": "Headphones",
+      "model_tier": "fast",
+      "model_ref": "custom_2/gemma-4-31B-it",
+      "max_daily_spend_inr": 0,
+      "open_source_engine": "cporter202/agentic-ai-starters + huabeitech/agent-desk + Mintplex-Labs/anythingllm-embed + helpin-ai/helpin + Bhavik-Jikadara/ai-customer-service-agent + Integrated Web Agent",
+      "github_repos": [
+        "https://github.com/cporter202/agentic-ai-starters",
+        "https://github.com/huabeitech/agent-desk",
+        "https://github.com/Mintplex-Labs/anythingllm-embed",
+        "https://github.com/helpin-ai/helpin",
+        "https://github.com/Bhavik-Jikadara/ai-customer-service-agent",
+        "https://github.com/firecrawl/firecrawl",
+        "https://github.com/browser-use/browser-use",
+        "https://github.com/D4Vinci/Scrapling",
+        "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
+        "https://github.com/tinyfish-io/tinyfish-web-agent-integrations"
+      ],
+      "base_skills": [
+        "mkai-customer-support",
+        "imap-smtp-email",
+        "docx",
+        "pdf",
+        "xlsx",
+        "web-search"
+      ],
+      "approval_actions": [
+        "Issuing customer refunds, credits, or billing adjustments",
+        "Sending external resolution emails to customers",
+        "Escalating critical SLA breaches to production pager"
+      ],
+      "description": "Autonomous omnichannel customer support & RAG helpdesk combining agentic-ai-starters, agent-desk, anythingllm-embed, helpin, and ai-customer-service-agent with built-in Web Agent for live documentation lookup, instant ticket triage, SLA tracking, and gated refund handling.",
+      "example_tasks": [
+        "Triage incoming customer support tickets by sentiment & SLA urgency and draft empathetic resolutions.",
+        "Generate an AnythingLLM/Helpin embeddable FAQ knowledge base and stage a gated refund approval."
+      ],
+      "mcp_tools": [
+        "workspace_create_draft",
+        "gmail_connect_and_send",
+        "web_agent_scrape_with_chrome_fallback",
+        "fs_read_file",
+        "fs_write_file"
+      ],
+      "sub_agents": [
+        [
+          "6.1",
+          "Agent-Desk Ticket Triage & SLA Router",
+          "Classify tickets by urgency, sentiment, and SLA tier in milliseconds via huabeitech/agent-desk",
+          "fast"
+        ],
+        [
+          "6.2",
+          "AnythingLLM & Helpin RAG Knowledge Resolver",
+          "Retrieve accurate documentation answers and self-service guides via Mintplex-Labs/anythingllm-embed & helpin-ai/helpin",
+          "fast"
+        ],
+        [
+          "6.3",
+          "AI Customer Service Response Writer",
+          "Draft warm, empathetic, solution-complete replies for email and chat via Bhavik-Jikadara/ai-customer-service-agent",
+          "main"
+        ],
+        [
+          "6.4",
+          "Agentic Refund & Billing Gatekeeper",
+          "Verify order/subscription history and stage refund or replacement requests for Boss approval via cporter202/agentic-ai-starters",
+          "main"
+        ],
+        [
+          "6.5",
+          "Churn Prevention & Product Feedback Analyst",
+          "Aggregate recurring support tickets into actionable product bug and UX improvement briefs",
+          "fast"
+        ]
+      ]
+    }
+  ]
+}

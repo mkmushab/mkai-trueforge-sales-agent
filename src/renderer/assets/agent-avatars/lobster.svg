@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="mkGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4FF0E6"/>
+      <stop offset="50%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#161923"/>
+  <path d="M16 26C16 17.163 23.163 10 32 10C40.837 10 48 17.163 48 26" stroke="url(#mkGrad)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 4"/>
+  <circle cx="32" cy="10" r="3.5" fill="#4FF0E6"/>
+  <circle cx="20" cy="15" r="3" fill="#5CE1E6"/>
+  <circle cx="44" cy="15" r="3" fill="#5CE1E6"/>
+  <circle cx="14" cy="26" r="3" fill="#6366F1"/>
+  <circle cx="50" cy="26" r="3" fill="#6366F1"/>
+  <path d="M18 44V22L28 36L38 22V44" stroke="url(#mkGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M38 33L48 22M38 33L48 44" stroke="url(#mkGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="18" cy="48" r="2.8" fill="#8B5CF6"/>
+  <circle cx="28" cy="52" r="2.8" fill="#8B5CF6"/>
+  <circle cx="38" cy="48" r="2.8" fill="#8B5CF6"/>
+  <circle cx="48" cy="48" r="2.8" fill="#8B5CF6"/>
+</svg>

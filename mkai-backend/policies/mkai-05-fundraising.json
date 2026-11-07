@@ -1,0 +1,73 @@
+{
+  "agent_id": "mkai-05-fundraising",
+  "department_name": "5. Fundraising & Investor Relations Agent",
+  "default_tier": "HEAVY",
+  "model_ref": "custom_1/deepseek-v3.2",
+  "open_source_engine": "howieyoung/ir-kit + captableinc/captable + civicrm/civicrm-core + tjboudreaux/cc-skills-vc-fundraising + MrZilinXiao/Auto-Make-Money + evalyze-ai/awesome-startup-fundraising + Integrated Web Agent",
+  "github_repos": [
+    "https://github.com/howieyoung/ir-kit",
+    "https://github.com/captableinc/captable",
+    "https://github.com/civicrm/civicrm-core",
+    "https://github.com/tjboudreaux/cc-skills-vc-fundraising",
+    "https://github.com/MrZilinXiao/Auto-Make-Money",
+    "https://github.com/evalyze-ai/awesome-startup-fundraising",
+    "https://github.com/firecrawl/firecrawl",
+    "https://github.com/browser-use/browser-use",
+    "https://github.com/D4Vinci/Scrapling",
+    "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
+    "https://github.com/tinyfish-io/tinyfish-web-agent-integrations"
+  ],
+  "max_daily_spend_inr": 0,
+  "allowed_tools": [
+    "file_read",
+    "file_write",
+    "shell_safe",
+    "http_get",
+    "browser_read",
+    "git_local",
+    "sqlite_task_board",
+    "output_engine"
+  ],
+  "ask_tools": [
+    "file_delete",
+    "email",
+    "email_send",
+    "ads_api",
+    "ads_api_mutate",
+    "cloud_api",
+    "cloud_api_deploy",
+    "git_push",
+    "git_push_remote",
+    "social_publish",
+    "payment",
+    "payment_disburse",
+    "whatsapp_broadcast"
+  ],
+  "deny_tools": [
+    "host_admin",
+    "raw_disk",
+    "credential_dump",
+    "untrusted_shell_exec"
+  ],
+  "auto_actions": [
+    "file_read",
+    "file_write_sandbox",
+    "web_scrape_readonly",
+    "competitor_pricing_analysis",
+    "lead_qualification_scoring",
+    "create_email_draft",
+    "stage_linkedin_outreach",
+    "laptop_chrome_diagnostic_check"
+  ],
+  "ask_actions": [
+    "Sending cold/warm outreach emails to VCs or Angel investors",
+    "Sharing confidential data room financial models",
+    "Circulating term sheets or SAFE agreements"
+  ],
+  "deny_actions": [
+    "rm_rf_root",
+    "format_disk",
+    "exfiltrate_env_secrets",
+    "bypass_gatekeeper_hmac"
+  ]
+}

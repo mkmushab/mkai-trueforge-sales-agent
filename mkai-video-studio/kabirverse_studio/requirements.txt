@@ -1,0 +1,13 @@
+# Pinned on purpose: moviepy 2.x removed `moviepy.editor`, numpy 2.x breaks moviepy 1.0.3
+moviepy==1.0.3
+numpy<2
+Pillow>=10.0.0
+imageio>=2.31
+imageio-ffmpeg>=0.4.9
+edge-tts>=6.1.12
+requests>=2.31.0
+python-dotenv>=1.0.1
+tzdata>=2024.1
+yt-dlp>=2024.8.6
+youtube-transcript-api>=0.6.2
+playwright>=1.46.0

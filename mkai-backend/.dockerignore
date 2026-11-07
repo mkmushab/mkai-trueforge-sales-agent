@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+*$py.class
+*.db
+*.sqlite
+*.sqlite3
+node_modules/
+dist/
+dist-electron/
+release/
+.git/
+.DS_Store

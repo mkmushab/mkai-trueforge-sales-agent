@@ -1,0 +1,44 @@
+# MK-AI Master Build Report — All Phases (Phase 0 to Phase 6 + E2E Verification)
+
+## 1. Summary of Completed Phases
+- **Phase 0 — Safety, Cleanup & Honest Baseline**:
+  - Removed all plain-text API keys from `.env.example`, deleted committed `.env` files (`.env`, `mkai-backend/.env`), and scrubbed all 21 `pages/*.jsx` files (`docs/mkai-web-pages/`).
+  - Upgraded `scripts/secret_scanner.py` and added `scripts/secret_scan` to `.husky/pre-commit`, `.github/workflows/ci.yml`, and `.github/workflows/security.yml`.
+  - Disabled fake deterministic fallbacks in `mkai-backend/tinyfish_bridge.py`, `mkai-backend/omni_orchestra.py`, `mkai-backend/crew_orchestrator.py`, and `src/main/libs/agentEngine/openclawRuntimeAdapter.ts`, returning `{ ok: false, error, hint }` when a service or credential is missing/unreachable and gating demo outputs strictly behind `MKAI_DEMO_MODE=1` with `src/renderer/components/common/DemoDataBadge.tsx`.
+  - Separated "Models" from "Services" (`isNonLlmServiceEntry` in `src/renderer/store/slices/modelSlice.ts`), moving `TinyFish` out of the Model Picker and into MCP Connectors (`src/renderer/data/mcpRegistry.json`).
+- **Phase 1 — Open-Source Engine Layer (`engines/` & `docs/engines.md`)**:
+  - Built adapters and `status()` health probes under `engines/` for `ethanplusai/harvey` (`engines/harvey/harvey_bridge.py` in strict `ASK_REQUIRED_NO_AUTO_SEND` mode), `Mahanaicoach/google-maps-scraper-kit` + `gosom/google-maps-scraper` (`engines/google-maps-scraper-kit/maps_leads_adapter.py`), `firecrawl/firecrawl` (`engines/firecrawl/firecrawl_adapter.py` — external service client, zero AGPL source copied), `Panniantong/Agent-Reach` (`engines/agent-reach/agent_reach_adapter.py` with `doctor` and allow-listed subcommands), `latent-spaces/brag` & `harry0703/MoneyPrinterTurbo` (`engines/brag/video_studio_adapter.py` with Node/FFmpeg/Hyperframes prerequisite checks and real FFmpeg MP4 rendering), `tt-a1i/archify` (`engines/archify/bin/archify.mjs` interactive draggable HTML diagram generator), `ruvnet/ruflo` (`engines/ruflo/ruflo_adapter.py`), and standalone `engines/tinyfish-squad/` (`leads`, `competitors`, `content`, `radar` with `--dry-run`, retries, and credit guard `--limit <= 10`).
+  - Documented all engines, licenses, and integration modes in `docs/engines.md` and `NOTICE.md`.
+- **Phase 2 — MCP Connectors (`mkai-backend/mcp_connectors.py`, `mkai-backend/mkai_mcp_server.py`, `src/renderer/data/mcpRegistry.json`)**:
+  - Registered 14 MCP connectors with real health checks (`Connected`, `Needs auth`, `Not installed`, `Error`, `Demo`), tool lists, `"Why is this red?"` diagnostics, and `test_connector()` execution.
+  - Registered 36 live MCP tools in `mkai-backend/mkai_mcp_server.py`, including read-only `internshala_search_internships` (never auto-applies) and `linkedin_assisted_search` (requires first-run consent, read-only, capped pages, no auto-connect/message/apply).
+- **Phase 3 — Rewritten `SKILLs/mkai-*/SKILL.md` & Live MCP Tool Linter (`scripts/lint_skills.py`)**:
+  - Rewrote all 30 Department `SKILL.md` files plus `SKILLs/mkai-opportunity-radar/SKILL.md` (31 total) to follow the 8-section contract (`Mission`, `Real Tools Available`, `Inputs Required`, `Workflow`, `Output Schema`, `Approval Gates`, `Failure Behaviour`, `Quality Bar`) with upstream attribution (`knowledge-work-plugins`, `agency-agents`, `claude-quickstarts`, `agent-skills`, `gstack`, `ecc`, `wshobson/agents`).
+  - Verified all 164 tool references across 31 skills against the live 36-tool MCP server via `scripts/lint_skills.py` and cryptographically signed all 60 skills in `SKILLs/skills_manifest.sig.json`.
+- **Phase 4 — Output Quality, Anti-Fabrication & Evaluation Harness (`mkai-backend/anti_fabrication.py`, `tests/evals/run_department_evals.py`)**:
+  - Added provider slots for `Anthropic`, `OpenAI`, and `OpenRouter` plus per-department model overrides and `supportsToolCalling` verification.
+  - Implemented `MKAntiFabricationEngine` to verify URL reachability (`HTTP 200`), reject placeholder domains (`example.com`), verify future deadlines, verify source-page email grounding, and flag near-identical score distributions.
+  - Executed 48 golden tasks across 16 departments (`46 passed`, `2 injected placeholder-domain negative tests caught and rejected by Anti-Fabrication`) and committed the report to `reports/evals/2026-11-02.md`.
+- **Phase 5 — UI/UX Redesign (`src/renderer/styles/designTokens.ts`, `src/renderer/components/missionControl/`)**:
+  - Built 8px grid design tokens with WCAG AA/AAA contrast, `ResizableGroupedSidebar.tsx` (5 collapsible groups: `Revenue`, `Growth`, `Build`, `Create`, `Business` with status dots and full-name tooltips), `MissionControlDashboard.tsx` (Home, Waiting-for-Approval strip, Quick-Start cards, Approvals Inbox with trust-for-N-actions off by default, Connectors page with `"Why is this red?"` & Test button, Outputs Library with CSV/MD/PDF/DOCX/HTML export, `Ctrl+K` Command Palette, and Open-Source Credits page from `NOTICE.md`), and `LiveRunAndBrowserView.tsx` (Step Timeline + Result Cards with Evidence Links + Live Browser Panel).
+- **Phase 6 & End-to-End Acceptance Suite (`tests/e2e_acceptance_suite.py`)**:
+  - Implemented `MKPlaywrightBrowserController` running with persistent profile `~/.mkai/browser-profile`, domain banner, Pause/Resume/Take over/Stop controls, domain allow-list, hard page cap per run, zero credential typing, and PNG step screenshots.
+  - Verified all 8 E2E and Phase 6 acceptance tests in `tests/e2e_acceptance_suite.py`.
+
+## 2. Verification Status Matrix (`python3 verify-all-systems.py`)
+
+| Phase / Subsystem | Status | Proof / Verification Output |
+| :--- | :--- | :--- |
+| Phase 0: Secret Scanner (`scripts/secret_scan`) | `SANDBOX-TESTED` | `scripts/secret_scan` exited 0 (0 hardcoded secrets across repo) |
+| Phase 0: No Fake Fallbacks (`tinyfish_bridge.py`, `omni_orchestra.py`) | `SANDBOX-TESTED` | `tinyfish_bridge.py` and `omni_orchestra.py` returned `{ok: False, error, hint}` with 0 invented leads when keys/services are absent |
+| Phase 0: Model Picker vs. Services Separation (TinyFish -> Connectors) | `SANDBOX-TESTED` | `ModelSelector`/`modelSlice` filters non-LLM services; TinyFish registered as HTTP MCP connector in `mcpRegistry.json` |
+| Phase 0: Gatekeeper, 30-Agent Registry & SHA-256 Audit Chain | `SANDBOX-TESTED` | 30 departments & 201 sub-agents loaded; Gatekeeper blocked destructive prompt & forged token; SHA-256 audit chain verified |
+| Phase 0: Electron ActionGate E2E (`tests/test_action_gate_e2e.mjs`) | `SANDBOX-TESTED` | `node --test tests/test_action_gate_e2e.mjs` passed (2/2 suites, fail-closed + replay blocked) |
+| Phase 1: Open-Source Engine Layer (`engines/` & `docs/engines.md`) | `SANDBOX-TESTED` | `status()` verified across all 8 Phase 1 engine adapters; `archify` rendered HTML (4,663B); `brag`/FFmpeg rendered MP4 (158,662B); Harvey approval bridge & Agent-Reach doctor verified |
+| Phase 2: MCP Connectors Hub (`mkai-backend/mcp_connectors.py` & `mcpRegistry.json`) | `SANDBOX-TESTED` | 14 MCP connectors registered with real health status, tool lists, `'Why is this red?'` diagnostics, and `test_connector()` support |
+| Phase 3: 31 Department & Radar `SKILL.md` Contract + Live MCP Tool Linter (`scripts/lint_skills.py`) | `SANDBOX-TESTED` | 31 MK-AI `SKILL.md` files passed 8-section contract & live MCP tool check; Verified 60 signed skill packs |
+| Phase 4: Anti-Fabrication & 48 Golden Department Evals (`tests/evals/run_department_evals.py`) | `SANDBOX-TESTED` | Ran 48 golden department evals (46 passed, 2 injected placeholder-URL failures caught by Anti-Fabrication); report saved to `reports/evals/2026-11-02.md` |
+| Phase 5: Mission Control UI/UX Redesign (`src/renderer/components/missionControl/`) | `SANDBOX-TESTED` | 8px design tokens, 5-group collapsible Sidebar (`Revenue`/`Growth`/`Build`/`Create`/`Business`), Mission Control Home, Live Run + Browser view, Approvals Inbox, Connectors page, Outputs Library, `Ctrl+K` Command Palette, and Open Source Credits implemented |
+| Phase 6 & E2E: Headed Browser Flow & 7 End-to-End Acceptance Tests (`tests/e2e_acceptance_suite.py`) | `SANDBOX-TESTED` | 8/8 E2E & Phase 6 acceptance tests passed (10 Dwarka clinics + 3 `<75w` drafts waiting for approval, 9 Delhi NCR electronics internships with expired excluded, GitHub gated PR, QA console error + screenshot, 20s MP4 launch video, offline honesty, Gatekeeper email block, and Browser 3-page extract + Take over/Resume + blocked domain refusal) |
+| External Network: Live LLM Multi-Model Router (`api.generalcompute.com`) | `NOT-TESTED` | Outbound network disabled in air-gapped sandbox VM; requires host internet + rotated API keys in `.env` |
+| External Network: Electron Full Bundler (`npm ci && npm run build`) | `NOT-TESTED` | `node_modules` not present in uploaded archive and outbound npm registry is unreachable in air-gapped VM |

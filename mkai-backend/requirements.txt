@@ -1,0 +1,5 @@
+# MK AI Dual-Brain Backend Dependencies
+# Core runtime uses Python 3.10+ standard library + sqlite3 + optional HTTP/MCP helpers
+httpx>=0.27.0
+pydantic>=2.7.0
+python-dotenv>=1.0.1

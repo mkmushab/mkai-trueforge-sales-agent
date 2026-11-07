@@ -1,0 +1,72 @@
+{
+  "agent_id": "mkai-06-support",
+  "department_name": "6. Customer Support Agent",
+  "default_tier": "FAST",
+  "model_ref": "custom_2/gemma-4-31B-it",
+  "open_source_engine": "cporter202/agentic-ai-starters + huabeitech/agent-desk + Mintplex-Labs/anythingllm-embed + helpin-ai/helpin + Bhavik-Jikadara/ai-customer-service-agent + Integrated Web Agent",
+  "github_repos": [
+    "https://github.com/cporter202/agentic-ai-starters",
+    "https://github.com/huabeitech/agent-desk",
+    "https://github.com/Mintplex-Labs/anythingllm-embed",
+    "https://github.com/helpin-ai/helpin",
+    "https://github.com/Bhavik-Jikadara/ai-customer-service-agent",
+    "https://github.com/firecrawl/firecrawl",
+    "https://github.com/browser-use/browser-use",
+    "https://github.com/D4Vinci/Scrapling",
+    "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
+    "https://github.com/tinyfish-io/tinyfish-web-agent-integrations"
+  ],
+  "max_daily_spend_inr": 0,
+  "allowed_tools": [
+    "file_read",
+    "file_write",
+    "shell_safe",
+    "http_get",
+    "browser_read",
+    "git_local",
+    "sqlite_task_board",
+    "output_engine"
+  ],
+  "ask_tools": [
+    "file_delete",
+    "email",
+    "email_send",
+    "ads_api",
+    "ads_api_mutate",
+    "cloud_api",
+    "cloud_api_deploy",
+    "git_push",
+    "git_push_remote",
+    "social_publish",
+    "payment",
+    "payment_disburse",
+    "whatsapp_broadcast"
+  ],
+  "deny_tools": [
+    "host_admin",
+    "raw_disk",
+    "credential_dump",
+    "untrusted_shell_exec"
+  ],
+  "auto_actions": [
+    "file_read",
+    "file_write_sandbox",
+    "web_scrape_readonly",
+    "competitor_pricing_analysis",
+    "lead_qualification_scoring",
+    "create_email_draft",
+    "stage_linkedin_outreach",
+    "laptop_chrome_diagnostic_check"
+  ],
+  "ask_actions": [
+    "Issuing customer refunds, credits, or billing adjustments",
+    "Sending external resolution emails to customers",
+    "Escalating critical SLA breaches to production pager"
+  ],
+  "deny_actions": [
+    "rm_rf_root",
+    "format_disk",
+    "exfiltrate_env_secrets",
+    "bypass_gatekeeper_hmac"
+  ]
+}
