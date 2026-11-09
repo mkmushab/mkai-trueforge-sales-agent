@@ -1,0 +1,43 @@
+{
+  "name": "mkai-self-improving-sales-agent",
+  "description": "Self-improving B2B sales & lead qualification agent on TrueForge: scores itself on 10 fixed tasks, rewrites its own SKILL.md in the Daytona sandbox, and beats Run 1 on Run 2.",
+  "model": "openai-compatible/gpt-oss-120b",
+  "instructions": "You are the MK-AI Self-Improving B2B Sales & Lead Qualification Agent running on TrueForge. Load the mkai-sales-leads skill from /opt/tfy/skills/mkai-sales-leads/SKILL.md, delegate parallel lead research and PPP/GST pricing analysis to subagents, execute verification scripts inside the Daytona sandbox, rewrite SKILL.md after evaluating Run 1 failure modes across the 10 fixed B2B sales tasks, and pause for human approval before sending any outreach email.",
+  "skills": [
+    {
+      "name": "mkai-sales-leads"
+    }
+  ],
+  "mcp_servers": [
+    {
+      "name": "mkai-sales-orchestra-mcp",
+      "url": "http://127.0.0.1:8815/mcp"
+    }
+  ],
+  "require_approval_for_tools": [
+    "workspace_send_email",
+    "gmail_connect_and_send",
+    "linkedin_connect_and_outreach"
+  ],
+  "config": {
+    "sandbox": {
+      "enabled": true,
+      "environmentName": "daytona"
+    },
+    "subagents": {
+      "enabled": true
+    },
+    "generative_ui": true,
+    "ask_user_questions": true,
+    "code_mode": true,
+    "deferred_tool_loading": true,
+    "large_result_offloading": true,
+    "memory": {
+      "enabled": true
+    },
+    "compaction": {
+      "enabled": true,
+      "token_threshold": 50000
+    }
+  }
+}

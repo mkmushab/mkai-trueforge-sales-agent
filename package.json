@@ -1,10 +1,31 @@
 {
   "name": "mkai-trueforge-sales-agent",
-  "version": "1.0.0",
+  "version": "6.2.0",
+  "description": "Self-Improving B2B Sales & Lead Qualification Agent built on TrueForge (@truefoundry/trueforge) that scores itself on 10 fixed tasks, rewrites its own SKILL.md in the Daytona sandbox, and beats Run 1 on Run 2.",
+  "type": "module",
   "private": true,
-  "description": "Self-Improving B2B Sales & Lead Qualification Agent on TrueFoundry TrueForge",
+  "engines": {
+    "node": ">=22.14.0"
+  },
   "scripts": {
-    "start:trueforge": "npx @truefoundry/trueforge@latest",
-    "eval": "python run.py"
-  }
+    "dev:trueforge": "npx @truefoundry/trueforge@latest",
+    "configure:trueforge": "node configure-trueforge.mjs",
+    "verify:self-improve": "node configure-trueforge.mjs --verify-loop"
+  },
+  "dependencies": {
+    "@truefoundry/trueforge": "^0.184.2",
+    "@truefoundry/trueforge-sdk": "^0.184.1",
+    "@truefoundry/trueforge-ui": "^0.184.1",
+    "@truefoundry/trueforge-core": "^0.184.0"
+  },
+  "keywords": [
+    "trueforge",
+    "truefoundry",
+    "self-improving-agent",
+    "skill-md",
+    "mcp",
+    "daytona-sandbox",
+    "stranger-builds"
+  ],
+  "license": "MIT"
 }

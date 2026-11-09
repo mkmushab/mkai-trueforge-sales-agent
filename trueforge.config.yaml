@@ -4,7 +4,7 @@
 
 server:
   base_url: "http://localhost:8790"
-  mode: "local" # SQLite in .trueforge-data/ locally; Postgres + Redis when STANDALONE=false
+  mode: "local"
   packages:
     runtime: "@truefoundry/trueforge"
     sdk: "@truefoundry/trueforge-sdk"
@@ -12,7 +12,6 @@ server:
     core: "@truefoundry/trueforge-core"
 
 # 1. Settings -> Models (/api/v1/settings/models)
-# Matches TrueForge catalog providers (OpenAI-compatible endpoint)
 models:
   - provider: "openai-compatible"
     name: "mkai-main-provider"
@@ -28,21 +27,15 @@ models:
         role: "BANT/MEDDIC 0-100 lead qualification, Maps/Web extraction & EspoCRM sync"
 
 # 2. Settings -> Skills (PUT /api/v1/settings/skills)
-# Per TrueForge Skills Spec (https://trueforge.mintlify.app/skills):
-# Skills must be git-backed directories rooted at SKILL.md (mounted at /opt/tfy/skills/{name})
 skills:
   - type: "git"
     name: "mkai-sales-leads"
     url: "https://github.com/mkmushab/mkai-trueforge-sales-agent"
     path: "skills/mkai-sales-leads"
     ref: "main"
-    description: >
-       Qualify B2B leads using BANT/MEDDIC (0-100), calculate USA vs. India PPP and 18% GST
-      pricing, draft <75-word signal-based cold emails, and self-improve SKILL.md across
-      10 fixed benchmark tasks.
+    description: "Qualify B2B leads using BANT/MEDDIC (0-100), calculate USA vs. India PPP and 18% GST pricing, draft <75-word signal-based cold emails, and self-improve SKILL.md across 10 fixed benchmark tasks."
 
 # 3. Settings -> Connectors / MCP Servers (/api/v1/settings/mcp-servers)
-# TrueForge connects to HTTP/SSE MCP endpoints (Settings -> Connectors)
 mcp_servers:
   - name: "mkai-sales-orchestra-mcp"
     url: "${MKAI_MCP_URL:-http://127.0.0.1:8815/mcp}"
@@ -74,7 +67,6 @@ mcp_servers:
         destructiveHint: true
 
 # 4. Settings -> Sandbox Providers (/api/v1/settings/sandbox)
-# Required by TrueForge whenever skills are attached to an agent
 sandbox_provider:
   provider: "daytona"
   api_key_env: "DAYTONA_API_KEY"
@@ -82,18 +74,11 @@ sandbox_provider:
   work_dir: "results/sandbox_artifacts"
 
 # 5. TrueForge Agent Spec (POST /api/v1/agents)
-# Matches TrueForge Agent Spec schema (skills referenced by name + config.sandbox.enabled = true)
 agent:
   name: "mkai-self-improving-sales-agent"
-  description: >
-    Self-improving B2B sales & lead qualification agent on TrueForge: scores itself on
-    10 fixed tasks, rewrites its own SKILL.md in the sandbox, and beats Run 1 on Run 2.
+  description: "Self-improving B2B sales & lead qualification agent on TrueForge: scores itself on 10 fixed tasks, rewrites its own SKILL.md in the sandbox, and beats Run 1 on Run 2."
   model: "${MK_MAIN_MODEL:-gpt-oss-120b}"
-  instructions: >
-    You are the MK-AI Self-Improving B2B Sales & Lead Qualification Agent running on the
-    TrueForge harness. Load the mkai-sales-leads skill from /opt/tfy/skills/mkai-sales-leads/SKILL.md,
-    delegate parallel research and scoring to subagents, run pricing and verification scripts
-    inside the Daytona sandbox, and pause for human approval before sending any outreach email.
+  instructions: "You are the MK-AI Self-Improving B2B Sales & Lead Qualification Agent running on the TrueForge harness. Load the mkai-sales-leads skill from /opt/tfy/skills/mkai-sales-leads/SKILL.md, delegate parallel research and scoring to subagents, run pricing and verification scripts inside the Daytona sandbox, and pause for human approval before sending any outreach email."
   skills:
     - name: "mkai-sales-leads"
   mcp_servers:
@@ -116,7 +101,7 @@ agent:
       enabled: true
       token_threshold: 50000
 
-# 6. Self-Improving Evaluation Loop (TrueForge Challenge Proof: Run 1 -> Rewrite SKILL.md -> Run 2)
+# 6. Self-Improving Evaluation Loop (Run 1 -> Rewrite SKILL.md -> Run 2)
 self_improvement_loop:
   benchmark_tasks: 10
   skill_target_path: "skills/mkai-sales-leads/SKILL.md"
