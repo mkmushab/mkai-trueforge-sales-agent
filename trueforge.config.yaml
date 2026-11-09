@@ -33,7 +33,7 @@ models:
 skills:
   - type: "git"
     name: "mkai-sales-leads"
-    url: "https://github.com/mkmushab/mk-ai-trueforge-sales-agent"
+    url: "https://github.com/mkmushab/mkai-trueforge-sales-agent"
     path: "skills/mkai-sales-leads"
     ref: "main"
     description: >
