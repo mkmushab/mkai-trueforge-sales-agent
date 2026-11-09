@@ -1,94 +1,127 @@
-# TrueForge Agent Harness Configuration — MK-AI Self-Improving Sales & Leads Agent
-# Compatible with: npx @truefoundry/trueforge@latest (https://github.com/truefoundry/trueforge)
-apiVersion: trueforge.dev/v1alpha1
-kind: AgentHarnessConfig
-metadata:
-  name: mkai-self-improving-sales-agent
-  version: "6.2.0"
-  description: >
-    Self-Improving B2B Sales & Lead Qualification Agent built on TrueForge.
-    Uses all 4 TrueForge pillars: Skills (SKILL.md with autonomous self-rewriting),
-    Subagents (4 parallel Sales specialists), MCP Server (mkai_mcp_server.py),
-    and Sandbox-as-a-Tool (isolated battlecard & SHA-256 verification).
+# TrueForge Agent & Settings Manifest — MK-AI Self-Improving Sales & Leads Agent
+# Runtime: npx @truefoundry/trueforge@latest (https://github.com/truefoundry/trueforge)
+# SDK: @truefoundry/trueforge-sdk | UI: @truefoundry/trueforge-ui | Core: @truefoundry/trueforge-core
 
-harness:
-  mode: local # Scales from 'local' (SQLite on localhost:8790) to 'hosted' (Postgres + Redis)
-  serverUrl: "http://localhost:8790"
-  compaction:
-    enabled: true
-    tokenThreshold: 50000
-  deferredToolLoading: true
-  codeMode: true
-  largeResultOffloading: true
+server:
+  base_url: "http://localhost:8790"
+  mode: "local" # SQLite in .trueforge-data/ locally; Postgres + Redis when STANDALONE=false
+  packages:
+    runtime: "@truefoundry/trueforge"
+    sdk: "@truefoundry/trueforge-sdk"
+    ui: "@truefoundry/trueforge-ui"
+    core: "@truefoundry/trueforge-core"
 
+# 1. Settings -> Models (/api/v1/settings/models)
+# Matches TrueForge catalog providers (OpenAI-compatible endpoint)
 models:
-  defaultProvider: openai-compatible
-  tiers:
-    main:
-      model: "${MK_MAIN_MODEL:-gpt-oss-120b}"
-      baseUrl: "${MK_BASE_URL:-https://api.generalcompute.com/v1}"
-      apiKeyEnv: "MK_MAIN_API_KEY"
-      role: "Harvey <75w Cold Email Authoring & OpenOutreach Multi-Channel Sequences"
-    heavy:
-      model: "${MK_HEAVY_MODEL:-deepseek-v3.2}"
-      baseUrl: "${MK_BASE_URL:-https://api.generalcompute.com/v1}"
-      apiKeyEnv: "MK_HEAVY_API_KEY"
-      role: "USA ($ USD) vs. India (₹ INR) PPP & 18% GST Math, Skill Self-Reflection & Rewriting"
-    fast:
-      model: "${MK_FAST_MODEL:-gemma-4-31B-it}"
-      baseUrl: "${MK_BASE_URL:-https://api.generalcompute.com/v1}"
-      apiKeyEnv: "MK_FAST_API_KEY"
-      role: "Fast BANT/MEDDIC 0-100 Lead Scoring, Maps/Web Extraction & EspoCRM Sync"
+  - provider: "openai-compatible"
+    name: "mkai-main-provider"
+    base_url: "${MK_BASE_URL:-https://api.generalcompute.com/v1}"
+    api_key_env: "MK_MAIN_API_KEY"
+    default_model: "${MK_MAIN_MODEL:-gpt-oss-120b}"
+    available_models:
+      - id: "${MK_MAIN_MODEL:-gpt-oss-120b}"
+        role: "Primary agent loop, Harvey <75w cold email authoring & multi-channel outreach"
+      - id: "${MK_HEAVY_MODEL:-deepseek-v3.2}"
+        role: "USA (USD) vs. India (INR) PPP & 18% GST pricing analysis, SKILL.md self-rewriting"
+      - id: "${MK_FAST_MODEL:-gemma-4-31B-it}"
+        role: "BANT/MEDDIC 0-100 lead qualification, Maps/Web extraction & EspoCRM sync"
 
-# Pillar 1: Git-backed & Self-Modifiable Skills (SKILL.md)
+# 2. Settings -> Skills (PUT /api/v1/settings/skills)
+# Per TrueForge Skills Spec (https://trueforge.mintlify.app/skills):
+# Skills must be git-backed directories rooted at SKILL.md (mounted at /opt/tfy/skills/{name})
 skills:
-  lazyLoadInSandbox: true
-  signatureManifest: "SKILLs/skills_manifest.sig.json"
-  packs:
-    - id: mkai-sales-leads
-      path: "SKILLs/mkai-sales-leads/SKILL.md"
-      mirrorPath: "skills/mkai-sales-leads/SKILL.md"
-      selfModifiable: true
+  - type: "git"
+    name: "mkai-sales-leads"
+    url: "https://github.com/mkmushab/mk-ai-trueforge-sales-agent"
+    path: "skills/mkai-sales-leads"
+    ref: "main"
+    description: >
+       Qualify B2B leads using BANT/MEDDIC (0-100), calculate USA vs. India PPP and 18% GST
+      pricing, draft <75-word signal-based cold emails, and self-improve SKILL.md across
+      10 fixed benchmark tasks.
 
-# Pillar 2: Parallel Specialist Subagents with Isolated Context
-subagents:
-  enabled: true
-  maxParallel: 4
-  definitions:
-    - id: subagent-2-1-ppp-pricing
-      name: "USA vs. India Competitor Pricing & PPP Strategist"
-      modelTier: heavy
-      tools: ["sales_us_india_pricing_analysis", "mkai_calculate_gst_and_profit"]
-    - id: subagent-2-4-bant-qualifier
-      name: "AI-Sales-Agent BANT / MEDDIC 0-100 Lead Qualifier"
-      modelTier: fast
-      tools: ["sales_qualify_and_score_leads", "maps_leads_search", "web_agent_scrape_with_chrome_fallback"]
-    - id: subagent-2-5-harvey-email
-      name: "Harvey <75w Signal Cold Email & Anti-Fabrication Specialist"
-      modelTier: main
-      tools: ["harvey_stage_draft", "harvey_outbox", "gmail_connect_and_send"]
-    - id: subagent-2-6-crm-outreach
-      name: "EspoCRM Dual-Currency Deal Desk & OpenOutreach Cadence Agent"
-      modelTier: fast
-      tools: ["sales_espocrm_sync", "linkedin_connect_and_outreach"]
+# 3. Settings -> Connectors / MCP Servers (/api/v1/settings/mcp-servers)
+# TrueForge connects to HTTP/SSE MCP endpoints (Settings -> Connectors)
+mcp_servers:
+  - name: "mkai-sales-orchestra-mcp"
+    url: "${MKAI_MCP_URL:-http://127.0.0.1:8815/mcp}"
+    transport: "streamable-http"
+    headers:
+      x-mkai-secret: "${MKAI_MCP_SECRET:-local-dev-secret}"
+    tools:
+      - name: "sales_us_india_pricing_analysis"
+        readOnlyHint: true
+      - name: "mkai_calculate_gst_and_profit"
+        readOnlyHint: true
+      - name: "sales_qualify_and_score_leads"
+        readOnlyHint: true
+      - name: "maps_leads_search"
+        readOnlyHint: true
+      - name: "web_agent_scrape_with_chrome_fallback"
+        readOnlyHint: true
+      - name: "harvey_stage_draft"
+        readOnlyHint: true
+      - name: "harvey_outbox"
+        readOnlyHint: true
+      - name: "sales_espocrm_sync"
+        destructiveHint: false
+      - name: "linkedin_connect_and_outreach"
+        destructiveHint: true
+      - name: "workspace_send_email"
+        destructiveHint: true
+      - name: "gmail_connect_and_send"
+        destructiveHint: true
 
-# Pillar 3: Model Context Protocol (MCP) Server Integration
-mcpServers:
-  - id: mkai-sales-orchestra-mcp
-    transport: stdio
-    command: "python3"
-    args: ["mkai-backend/mkai_mcp_server.py"]
-    deferredLoading: true
-    humanApprovalCheckpoints:
-      - tool: "workspace_send_email"
-        policy: "ASK"
-      - tool: "gmail_connect_and_send"
-        policy: "ASK_WHEN_SEND_IMMEDIATELY"
+# 4. Settings -> Sandbox Providers (/api/v1/settings/sandbox)
+# Required by TrueForge whenever skills are attached to an agent
+sandbox_provider:
+  provider: "daytona"
+  api_key_env: "DAYTONA_API_KEY"
+  mount_path: "/opt/tfy/skills/mkai-sales-leads"
+  work_dir: "results/sandbox_artifacts"
 
-# Pillar 4: Sandbox-as-a-Tool (On-Demand Isolated Execution)
-sandbox:
-  enabled: true
-  provider: "daytona-or-local"
-  provisionOnDemand: true
-  workDir: "results/sandbox_artifacts"
-  allowedOutputs: [".xlsx", ".pdf", ".csv", ".json", ".patch"]
+# 5. TrueForge Agent Spec (POST /api/v1/agents)
+# Matches TrueForge Agent Spec schema (skills referenced by name + config.sandbox.enabled = true)
+agent:
+  name: "mkai-self-improving-sales-agent"
+  description: >
+    Self-improving B2B sales & lead qualification agent on TrueForge: scores itself on
+    10 fixed tasks, rewrites its own SKILL.md in the sandbox, and beats Run 1 on Run 2.
+  model: "${MK_MAIN_MODEL:-gpt-oss-120b}"
+  instructions: >
+    You are the MK-AI Self-Improving B2B Sales & Lead Qualification Agent running on the
+    TrueForge harness. Load the mkai-sales-leads skill from /opt/tfy/skills/mkai-sales-leads/SKILL.md,
+    delegate parallel research and scoring to subagents, run pricing and verification scripts
+    inside the Daytona sandbox, and pause for human approval before sending any outreach email.
+  skills:
+    - name: "mkai-sales-leads"
+  mcp_servers:
+    - "mkai-sales-orchestra-mcp"
+  require_approval_for_tools:
+    - "workspace_send_email"
+    - "gmail_connect_and_send"
+    - "linkedin_connect_and_outreach"
+  config:
+    sandbox:
+      enabled: true
+    subagents:
+      enabled: true
+    generative_ui: true
+    ask_user_questions: true
+    code_mode: true
+    deferred_tool_loading: true
+    large_result_offloading: true
+    compaction:
+      enabled: true
+      token_threshold: 50000
+
+# 6. Self-Improving Evaluation Loop (TrueForge Challenge Proof: Run 1 -> Rewrite SKILL.md -> Run 2)
+self_improvement_loop:
+  benchmark_tasks: 10
+  skill_target_path: "skills/mkai-sales-leads/SKILL.md"
+  sandbox_skill_mount: "/opt/tfy/skills/mkai-sales-leads/SKILL.md"
+  session_api_endpoint: "/api/v1/sessions"
+  run_1_baseline_log: "results/run_1_baseline.json"
+  skill_diff_patch: "results/sandbox_artifacts/skill_self_rewrite.patch"
+  run_2_improved_log: "results/run_2_improved.json"
